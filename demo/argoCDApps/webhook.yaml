@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webhook-demo
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: webhook
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: argo-events-0.13.0
+    app.kubernetes.io/component: webhook
+    app.kubernetes.io/part-of: argo-events
+    app.kubernetes.io/version: 0.13.0
+    app.kubernetes.io/instance: webhook
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/part-of: argo-events
+    app.kubernetes.io/version: 0.13.0
+  annotations:
+    meta.helm.sh/release-name: argo-events
+    meta.helm.sh/release-namespace: argocd
+spec:
+  destination:
+    namespace: argo-events  
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: argoproj/demo/webhook
+    repoURL: https://github.com/smarman85/infra101.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

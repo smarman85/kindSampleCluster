@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflows
+  namespace: argo
+  labels:
+    app.kubernetes.io/name: wsbhook
+    app.kubernetes.io/instance: workflows
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: argo-workflows-0.13.0
+    app.kubernetes.io/component: workflows
+    app.kubernetes.io/part-of: argo-workflows
+    app.kubernetes.io/version: 0.13.0
+    app.kubernetes.io/instance: workflows
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: workflows
+    app.kubernetes.io/part-of: argo-workflows
+    app.kubernetes.io/version: 0.13.0
+  annotations:
+    meta.helm.sh/release-name: argo-workflows
+    meta.helm.sh/release-namespace: argo
+spec:
+  destination:
+    namespace: argo
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: argoproj/charts/infra/argo-workflows
+    repoURL: https://github.com/smarman85/infra101.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

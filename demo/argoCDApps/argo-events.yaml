@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-events
+  namespace: argo-events
+  labels:
+    app.kubernetes.io/name: wsbhook
+    app.kubernetes.io/instance: events
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: argo-events-0.13.0
+    app.kubernetes.io/component: events
+    app.kubernetes.io/part-of: argo-events
+    app.kubernetes.io/version: 0.13.0
+    app.kubernetes.io/instance: events
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: events
+    app.kubernetes.io/part-of: argo-events
+    app.kubernetes.io/version: 0.13.0
+  annotations:
+    meta.helm.sh/release-name: argo-events
+    meta.helm.sh/release-namespace: argo
+spec:
+  destination:
+    namespace: argo-events
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: argoproj/charts/infra/argo-events
+    repoURL: https://github.com/smarman85/infra101.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
