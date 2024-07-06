@@ -3,11 +3,16 @@ DATE := $(shell date +%FT%T%Z)
 # below is the escaped version of the password coming from: htpasswd -bnBC 10 "" admin | tr -d ':\n' | sed 's/$2y/$2a/'
 ADMIN_PASSWORD := $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOgK # admin
 WEBHOOK_POD := $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
+CLUSTER_NAME := lab
+
 build-cluster:
-	kind create cluster --config ./config/kind-cluster.yaml
+	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
+
+build-cluster-linux:
+	systemd-run --scope --user -p "Delegate=yes" kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
 delete-cluster:
-	kind delete cluster	-n yopass-wrkfl
+	kind delete cluster	-n $(CLUSTER_NAME)
 
 create-namespaces:
 	kubectl create namespace argo
@@ -79,3 +84,4 @@ demo-webhook-run:
 	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
 
 init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
+init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
