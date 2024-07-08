@@ -49,6 +49,13 @@ argocd-notifications:
 	kubectl apply -n argocd -f ./charts/infra/argocd-notifications/install.yaml
 	kubectl apply -n argocd -f ./charts/infra/argocd-triggers/install.yaml
 
+ingress:
+	kubectl apply -f ./charts/infra/nginx-ingress/deploy.yaml
+	kubectl wait --namespace ingress-nginx \
+  	--for=condition=ready pod \
+  	--selector=app.kubernetes.io/component=controller \
+  	--timeout=90s
+
 demo-workflow:
 	kubectl apply -n argo -f ./demo/workflow/install.yaml
 
