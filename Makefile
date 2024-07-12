@@ -39,6 +39,9 @@ argo-workflows-ui:
 	kubectl wait --for=condition=available deployment/argo-server -n argo --timeout=30s --timeout=60s
 	open /Applications/Google\ Chrome.app/ "https://0.0.0.0:32746/workflows/undefined?&limit=50"
 
+argocd-web-terminal:
+	kubectl apply -f ./charts/infra/argocd/argocd-web-terminal.yaml -n argocd
+
 argo-events:
 	kubectl apply -f ./charts/infra/argo-events/install.yaml -n argo-events
 	kubectl apply -n argo-events -f ./charts/infra/argo-events/native.yaml
@@ -69,7 +72,7 @@ webhook-tf:
 	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
 	kubectl apply -n argo-events -f ./demo/webhook-tf/install.yaml
 	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
-	kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
+	# kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
 
 webhook-demo:
 	curl -d '{"vControl":"bitbucket.org","repoOwner":"instadevelopers", "repo": "n1-iac","sha": "6051b943b22b04f7fe92b64e0c7694ea4832d0b1"}' -H "Content-Type: application/json" -X POST http://localhost:12000/tf
@@ -81,7 +84,8 @@ demo-dag:
 	kubectl apply -n argo -f ./demo/dag/install.yaml
 
 demo-cron:
-	kubectl apply -n argo -f ./demo/cron/install.yaml
+	kubectl apply -n argocd -f ./charts/crds/cronflow.yaml
+	# kubectl apply -n argo -f ./demo/cron/install.yaml
 
 demo-webhook:
 	kubectl apply -f ./demo/argoCDApps/webhook.yaml
