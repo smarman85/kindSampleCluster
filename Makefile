@@ -94,5 +94,8 @@ demo-webhook:
 demo-webhook-run:
 	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
 
+web-pod:
+	kubectl apply -f ./charts/crds/pod.yaml -n argocd
+
 init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
 init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
