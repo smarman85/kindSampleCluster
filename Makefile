@@ -40,7 +40,7 @@ argo-workflows-ui:
 	open /Applications/Google\ Chrome.app/ "https://0.0.0.0:32746/workflows/undefined?&limit=50"
 
 argocd-web-terminal:
-	kubectl apply -f ./charts/infra/argocd/argocd-web-terminal.yaml -n argocd
+	kubectl apply -f ./charts/crds/pod.yaml -n argocd
 
 argo-events:
 	kubectl apply -f ./charts/infra/argo-events/install.yaml -n argo-events
