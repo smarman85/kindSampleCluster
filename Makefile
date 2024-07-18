@@ -63,8 +63,9 @@ demo-workflow:
 	kubectl apply -n argo -f ./demo/workflow/install.yaml
 
 yopass-install:
-	kubectl create namespace yopass
-	kubectl apply -n yopass -f ./charts/infra/yopass/deploy/yopass-k8.yaml
+	#kubectl create namespace yopass
+	#kubectl apply -n yopass -f ./charts/infra/yopass/deploy/yopass-k8.yaml
+	kubectl apply -f ./charts/crds/yopass.yaml
 	kubectl wait --for=condition=available deployment/yopass -n yopass --timeout=30s --timeout=60s
 	kubectl port-forward service/yopass 1337:1337 -n yopass &
 
