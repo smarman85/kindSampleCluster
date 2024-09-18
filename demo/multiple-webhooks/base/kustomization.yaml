@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ServiceAccount.yaml
+- Role.yaml
+- RoleBinding.yaml
+- EventSource.yaml
+- Sensor.yaml
+- Services.yaml
+- Ingress.yaml
+- EventBus.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true

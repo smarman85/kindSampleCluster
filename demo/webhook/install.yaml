@@ -17,6 +17,13 @@ spec:
       endpoint: /example
       # HTTP request method to allow. In this case, only POST requests are accepted
       method: POST
+    test:
+      # port to run HTTP server on
+      port: "13000"
+      # endpoint to listen to
+      endpoint: /test
+      # HTTP request method to allow. In this case, only POST requests are accepted
+      method: POST
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
@@ -29,6 +36,9 @@ spec:
     - name: test-dep
       eventSourceName: webhook
       eventName: example
+    - name: test-dev-test
+      eventSourceName: webhook
+      eventName: test
   triggers:
     - template:
         name: webhook-workflow-trigger
@@ -59,6 +69,37 @@ spec:
           parameters:
             - src:
                 dependencyName: test-dep
+                dataKey: body
+              dest: spec.arguments.parameters.0.value
+    - template:
+        name: webhook-workflow-trigger-test
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: test-
+              spec:
+                entrypoint: whalesay
+                arguments:
+                  parameters:
+                  - name: message
+                    # the value will get overridden by event payload from test-dep
+                    value: hello world
+                templates:
+                - name: whalesay
+                  inputs:
+                    parameters:
+                    - name: message
+                  container:
+                    image: docker/whalesay:latest
+                    command: [cowsay]
+                    args: ["{{workflow.name}}"]
+          parameters:
+            - src:
+                dependencyName: test-deptest
                 dataKey: body
               dest: spec.arguments.parameters.0.value
 ---

@@ -1,0 +1,215 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: "swissarmyknife"
+  namespace: "swissarmyknife"
+spec:
+  template:
+    serviceAccountName: swissarmyknife-account
+    automountServiceAccountToken: true
+  dependencies:
+    - name: swiss-bundle
+      eventSourceName: swissarmyknife-es
+      eventName: tf
+    - name: swiss-bundle-kustomize
+      eventSourceName: swissarmyknife-es
+      eventName: kustomize
+  triggers:
+    - template:
+        name: armyknife-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: swissarmyknife-
+              spec:
+                serviceAccountName: swissarmyknife-account
+                automountServiceAccountToken: true
+                ttlStrategy:
+                  secondsAfterCompletion: 86400
+                  secondsAfterSuccess: 86400
+                  secondsAfterFailure: 345600
+                entrypoint: terraform
+                arguments:
+                  parameters:
+                  #- name: vControl
+                  #  # the value will get overridden by event payload from swiss-bundle
+                  #  value: default
+                  - name: repoOwner
+                    value: default
+                  - name: repo
+                    value: default
+                  - name: sha
+                    value: default
+                  - name: prNumber
+                    value: default
+                  - name: caller
+                    value: default
+                  - name: destSha
+                    value: default
+                templates:
+                - name: terraform
+                  inputs:
+                    parameters:
+                    # - name: vControl
+                    #   value: default
+                    - name: repoOwner
+                      value: default
+                    - name: repo
+                      value: default
+                    - name: sha
+                      value: default
+                    - name: prNumber
+                      value: default
+                    - name: caller
+                      value: default
+                    - name: destSha
+                      value: default
+                  container:
+                    image: localhost:latest
+                    command: ['/app/tf-apply.sh']
+                    args:
+                      - "bitbucket.org"
+                      - "{{inputs.parameters.repoOwner}}"
+                      - "{{inputs.parameters.repo}}"
+                      - "{{inputs.parameters.sha}}"
+                      - "{{inputs.parameters.prNumber}}"
+                      - "{{inputs.parameters.caller}}"
+                      - "{{inputs.parameters.destSha}}"
+                      - "{{workflow.name}}"
+                    env:
+                    - name: YOPASS_URL_INT
+                      value: http://yopass-service.yopass.svc
+                    - name: YOPASS_URL_EXT
+                      value: https://yopass.us.niumops.com
+                    - name: CONFIG_SECRETS
+                      value: us/swissarmyknife/config_secrets
+                    volumeMounts:
+                  volumes:
+          parameters:
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.repository.owner.display_name
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.repository.name
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.pullrequest.source.commit.hash
+              dest: spec.arguments.parameters.2.value
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.pullrequest.id
+              dest: spec.arguments.parameters.3.value
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.repository.links.self.href
+              dest: spec.arguments.parameters.4.value
+            - src:
+                dependencyName: swiss-bundle
+                dataKey: body.pullrequest.destination.commit.hash
+              dest: spec.arguments.parameters.5.value
+    - template:
+        name: armyknife-trigger-kustomize
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: swissarmyknife-km
+              spec:
+                serviceAccountName: swissarmyknife-account
+                automountServiceAccountToken: true
+                ttlStrategy:
+                  secondsAfterCompletion: 86400
+                  secondsAfterSuccess: 86400
+                  secondsAfterFailure: 345600
+                entrypoint: kustomize
+                arguments:
+                  parameters:
+                  #- name: vControl
+                  #  value: default
+                  - name: repoOwner
+                    value: default
+                  - name: repo
+                    value: default
+                  - name: sha
+                    value: default
+                  - name: prNumber
+                    value: default
+                  - name: caller
+                    value: default
+                  - name: destSha
+                    value: default
+                templates:
+                - name: kustomize
+                  inputs:
+                    parameters:
+                    # - name: vControl
+                    #   value: default
+                    - name: repoOwner
+                      value: default
+                    - name: repo
+                      value: default
+                    - name: sha
+                      value: default
+                    - name: prNumber
+                      value: default
+                    - name: caller
+                      value: default
+                    - name: destSha
+                      value: default
+                  container:
+                    image: localhost:latest
+                    command: ['/app/kustomize.sh']
+                    args:
+                      - "bitbucket.org"
+                      - "{{inputs.parameters.repoOwner}}"
+                      - "{{inputs.parameters.repo}}"
+                      - "{{inputs.parameters.sha}}"
+                      - "{{inputs.parameters.prNumber}}"
+                      - "{{inputs.parameters.caller}}"
+                      - "{{inputs.parameters.destSha}}"
+                      - "{{workflow.name}}"
+                    env:
+                    - name: YOPASS_URL_INT
+                      value: http://yopass-service.yopass.svc
+                    - name: YOPASS_URL_EXT
+                      value: https://yopass.us.niumops.com
+                    - name: CONFIG_SECRETS
+                      value: us/swissarmyknife/config_secrets
+                    volumeMounts:
+                  volumes:
+          parameters:
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.repository.owner.display_name
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.repository.name
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.pullrequest.source.commit.hash
+              dest: spec.arguments.parameters.2.value
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.pullrequest.id
+              dest: spec.arguments.parameters.3.value
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.repository.links.self.href
+              dest: spec.arguments.parameters.4.value
+            - src:
+                dependencyName: swiss-bundle-kustomize
+                dataKey: body.pullrequest.destination.commit.hash
+              dest: spec.arguments.parameters.5.value

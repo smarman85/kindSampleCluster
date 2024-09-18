@@ -1,0 +1,4 @@
+---
+images:
+- path: spec/triggers[]/template/k8s/source/resource/spec/templates[]/container/image
+  kind: Sensor

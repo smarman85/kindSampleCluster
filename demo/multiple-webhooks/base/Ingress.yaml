@@ -1,0 +1,34 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "swissarmyknife-ing"
+  namespace: "swissarmyknife"
+  labels:
+    app.kubernetes.io/name: "swissarmyknife"
+    app: "swissarmyknife"
+    event: "swissarmyknife-es"
+    backstage.io/kubernetes-id: "swissarmyknife"
+  annotations:
+spec:
+  rules:
+  - host: "swissarmyknife.us.niumops.com"
+    http:
+      paths:
+      - path: /tf
+        backend:
+          service:
+            name: "swissarmyknife-svc"
+            port:
+              number: 80
+        pathType: Exact
+  - host: "swissarmyknife.us.niumops.com"
+    http:
+      paths:
+      - path: /kustomize
+        backend:
+          service:
+            name: "swissarmyknife-kustomize"
+            port:
+              number: 80
+        pathType: Exact

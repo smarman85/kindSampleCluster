@@ -1,0 +1,16 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: "swissarmyknife-es"
+  namespace: "swissarmyknife"
+spec:
+  webhook:
+    tf:
+      port: "12000"
+      endpoint: /tf
+      method: POST
+    kustomize:
+      port: "13000"
+      endpoint: /kustomize
+      method: POST

@@ -69,6 +69,9 @@ yopass-install:
 	kubectl wait --for=condition=available deployment/yopass -n yopass --timeout=30s --timeout=60s
 	kubectl port-forward service/yopass 1337:1337 -n yopass &
 
+metrics-server:
+	kubectl apply -f ./config/components.yaml
+
 webhook-tf:
 	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
 	kubectl apply -n argo-events -f ./demo/webhook-tf/install.yaml
@@ -100,3 +103,11 @@ web-pod:
 
 init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
 init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
+
+hpa-noargo:
+	kubectl create namespace hpa
+	kubectl apply -f ./demo/hpa/php-apache.yaml -n hpa
+	kubectl autoscale deployment php-apache -n hpa --cpu-percent=50 --min=1 --max=10
+
+hpa-argo:
+	kubectl apply -n argocd -f ./charts/crds/php-apache.yaml

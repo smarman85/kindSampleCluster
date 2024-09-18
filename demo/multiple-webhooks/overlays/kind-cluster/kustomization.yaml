@@ -1,0 +1,8 @@
+resources:
+  - ../../base
+images:
+  - name: balh
+    newTag: 111aa
+
+#patches:
+#- path: patch-ingress
