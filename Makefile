@@ -113,6 +113,11 @@ hpa-noargo:
 hpa-argo:
 	kubectl apply -n argocd -f ./charts/crds/php-apache.yaml
 
+hpa-loadgen:
+	kubectl run -i --tty load-generator --rm -n php-apache --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
+
+demo-keda: 
+
 keda-install:
 	kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.15.1/keda-2.15.1-core.yaml
 
