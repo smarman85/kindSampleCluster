@@ -102,6 +102,7 @@ web-pod:
 	kubectl apply -f ./charts/crds/pod.yaml -n argocd
 
 init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
+init-basic: build-cluster create-namespaces argocd argocd-patch-secret 
 init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
 
 hpa-noargo:
@@ -111,3 +112,7 @@ hpa-noargo:
 
 hpa-argo:
 	kubectl apply -n argocd -f ./charts/crds/php-apache.yaml
+
+keda-install:
+	kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.15.1/keda-2.15.1-core.yaml
+

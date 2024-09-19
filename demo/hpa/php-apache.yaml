@@ -12,7 +12,6 @@ spec:
       labels:
         run: php-apache
     spec:
-      replicas: 1
       containers:
       - name: php-apache
         image: registry.k8s.io/hpa-example
