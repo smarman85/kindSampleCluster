@@ -32,14 +32,14 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: php-apache
+      run: psql-host
   template:
     metadata:
       labels:
-        run: php-apache
+        run: psql-host
     spec:
       containers:
-      - name: psql-database
+      - name: psql-host
         image: postgres:14.1-alpine
         ports:
         - containerPort: 5432
