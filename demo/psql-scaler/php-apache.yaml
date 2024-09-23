@@ -96,7 +96,7 @@ spec:
   triggers:
     - type: postgresql
       metadata:
-        host: "psql-scaler.psql-scaler"
+        host: "psql-scaler.psql-scaler.cluster.local"
         userName: "postgres"
         password: "postgres"
         dbName: "dvdrental"
