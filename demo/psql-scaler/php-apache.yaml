@@ -18,6 +18,9 @@ spec:
         image: registry.k8s.io/hpa-example
         ports:
         - containerPort: 80
+        env:
+        - name: PSQL_CONN_STRING
+          value: "postgresql://postgres:postgres@psql-scaler.psql-scaler.svc.cluster.local:5432/dvdrental"
         resources:
           limits:
             cpu: 500m
@@ -96,11 +99,7 @@ spec:
   triggers:
     - type: postgresql
       metadata:
-        host: "psql-scaler.psql-scaler.svc.cluster.local"
-        userName: "postgres"
-        password: "postgres"
-        dbName: "dvdrental"
-        port: "5432"
+        connectionFromEnv: PSQL_CONN_STRING
         query: "SELECT COUNT(*) FROM triggers WHERE status='pending';"
         targetQueryValue: "5"
         sslmode: disable
