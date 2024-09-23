@@ -96,10 +96,11 @@ spec:
   triggers:
     - type: postgresql
       metadata:
-        userName: postgres
-        password: postgres
-        host: psql-scaler.psql-scaler
-        dbName: dvdrental
+        host: "psql-scaler.psql-scaler"
+        userName: "postgres"
+        password: "postgres"
+        dbName: "dvdrental"
         port: "5432"
         query: "SELECT COUNT(*) FROM triggers WHERE status='pending';"
         targetQueryValue: "5"
+        sslmode: disable
