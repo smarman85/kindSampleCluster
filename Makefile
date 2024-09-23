@@ -116,8 +116,14 @@ hpa-argo:
 hpa-loadgen:
 	kubectl run -i --tty load-generator --rm -n php-apache --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
 
-demo-keda: 
 
 keda-install:
 	kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.15.1/keda-2.15.1-core.yaml
 
+localstack:
+	kubectl apply -f charts/crds/localstack.yaml
+
+localstack-portforward:
+	kubectl -n localstack port-forward svc/localstack 4566:4566 &
+# alias aws="aws --endpoint-url=http://localhost:4566"
+# make aws calls as normal
