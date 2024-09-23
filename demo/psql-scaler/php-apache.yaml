@@ -43,7 +43,8 @@ spec:
     spec:
       containers:
       - name: psql-host
-        image: postgres:14.1-alpine
+        image: smarman/psqlsample:latest
+        command: ["postgres"]
         ports:
         - containerPort: 5432
         env:
@@ -99,7 +100,7 @@ spec:
   triggers:
     - type: postgresql
       metadata:
-        connectionFromEnv: PSQL_CONN_STRING
+        connectionFromEnv: PSQL_CONN_STRING ## this value comes from env vars on the scaleTargetRef above
         query: "SELECT COUNT(*) FROM triggers WHERE status='pending';"
         targetQueryValue: "5"
         sslmode: disable
