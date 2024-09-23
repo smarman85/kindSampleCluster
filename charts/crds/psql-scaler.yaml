@@ -6,7 +6,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: php-apache 
+    namespace: psql-scaler
     name: in-cluster
   project: default
   source:
