@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: grafana
   namespace: argocd
 spec:
   destination:
@@ -10,8 +10,7 @@ spec:
     name: in-cluster
   project: default
   source:
-    #path: charts/kube-prometheus-stack
-    path: charts/prometheus
+    path: charts/grafana
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
