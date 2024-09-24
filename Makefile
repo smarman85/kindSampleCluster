@@ -135,3 +135,8 @@ prometheus:
 	kubectl apply -f charts/crds/prometheus.yaml
 	kubectl wait --for=condition=available deployment/prometheus-server -n monitoring --timeout=30s --timeout=60s
 	kubectl port-forward -n monitoring svc/prometheus-server 9090:80 &
+
+grafana:
+	kubectl apply -f charts/crds/grafana.yaml
+	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=30s --timeout=60s
+	kubectl port-forward -n monitoring svc/grafana 3000:80 &
