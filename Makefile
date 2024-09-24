@@ -127,3 +127,6 @@ localstack-portforward:
 	kubectl -n localstack port-forward svc/localstack 4566:4566 &
 # alias aws="aws --endpoint-url=http://localhost:4566"
 # make aws calls as normal
+
+psql-scaler:
+	kubectl apply -f charts/crds/psql-scaler.yaml
