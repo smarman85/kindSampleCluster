@@ -6,6 +6,8 @@ metadata:
   namespace: psql-scaler
 data:
   PSQL_CONN_STRING: "cG9zdGdyZXNxbDovL3Bvc3RncmVzOnBvc3RncmVzQHBzcWwtc2NhbGVyLnBzcWwtc2NhbGVyLnN2Yy5jbHVzdGVyLmxvY2FsOjU0MzIvZHZkcmVudGFs" # connect to sample db - don't ever git track real creds
+  POSTGRES_USER: "UE9TVEdSRVNfVVNFUg=="
+  POSTGRES_PASSWORD: "UE9TVEdSRVNfVVNFUg=="
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,9 +61,15 @@ spec:
         - containerPort: 5432
         env:
         - name: POSTGRES_USER
-          value: postgres
-        - name: POSTGRES_PASSWORD
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              name: psql-secret
+              key: POSTGRES_USER
+        - name: PSQL_CONN_STRING
+          valueFrom:
+            secretKeyRef:
+              name: psql-secret
+              key: PSQL_CONN_STRING
         - name: POSTGRES_DB
           value: dvdrental
         resources:
