@@ -112,5 +112,5 @@ spec:
       metadata:
         connectionFromEnv: PSQL_CONN_STRING ## this value comes from env vars on the scaleTargetRef above
         query: "SELECT COUNT(*) FROM triggers WHERE status='pending';"
-        targetQueryValue: "5"
+        targetQueryValue: "2"
         sslmode: disable
