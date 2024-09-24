@@ -6,12 +6,12 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: prometheus
+    namespace: monitoring
     name: in-cluster
   project: default
   source:
-    path: keda
-    repoURL: https://github.com/prometheus-operator/prometheus-operator.git
+    path: charts/prometheus
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
     automated:
