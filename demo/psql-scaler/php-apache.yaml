@@ -65,11 +65,11 @@ spec:
             secretKeyRef:
               name: psql-secret
               key: POSTGRES_USER
-        - name: PSQL_CONN_STRING
+        - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               name: psql-secret
-              key: PSQL_CONN_STRING
+              key: POSTGRES_PASSWORD
         - name: POSTGRES_DB
           value: dvdrental
         resources:
