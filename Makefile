@@ -130,3 +130,8 @@ localstack-portforward:
 
 psql-scaler:
 	kubectl apply -f charts/crds/psql-scaler.yaml
+
+prometheus:
+	kubectl apply -f charts/crds/prometheus.yaml
+	kubectl wait --for=condition=available deployment/prometheus-server -n monitoring --timeout=30s --timeout=60s
+	kubectl port-forward -n monitoring svc/prometheus-server 9090:80 &
