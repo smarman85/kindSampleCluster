@@ -5,7 +5,7 @@ metadata:
   name: psql-secret
   namespace: psql-scaler
 data:
-  PSQL_CONN_STRING: "cG9zdGdyZXNxbDovL3Bvc3RncmVzOnBvc3RncmVzQHBzcWwtc2NhbGVyLnBzcWwtc2NhbGVyLnN2Yy5jbHVzdGVyLmxvY2FsOjU0MzIvZHZkcmVudGFsCg==" # connect to sample db - don't ever git track real creds
+  PSQL_CONN_STRING: "cG9zdGdyZXNxbDovL3Bvc3RncmVzOnBvc3RncmVzQHBzcWwtc2NhbGVyLnBzcWwtc2NhbGVyLnN2Yy5jbHVzdGVyLmxvY2FsOjU0MzIvZHZkcmVudGFs" # connect to sample db - don't ever git track real creds
 ---
 apiVersion: apps/v1
 kind: Deployment
