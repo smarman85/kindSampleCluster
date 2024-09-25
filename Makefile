@@ -144,5 +144,5 @@ grafana:
 
 http-metrics:
 	kubectl apply -f charts/crds/prom-metrics.yaml
-	kubectl wait --for=condition=available deployment/grafana -n monitoring --timeout=30s --timeout=60s
-	kubectl port-forward -n prom svc/http-server 8890:80
+	kubectl wait --for=condition=available deployment/http-server -n prom --timeout=30s --timeout=60s
+	kubectl port-forward -n prom svc/http-server 8090:80 &
