@@ -1152,7 +1152,7 @@ grafana:
     # in grafana.ini
     path: "/metrics"
 
-    #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
+    namespace: prom  # (defaults to use the namespace this chart is deployed to)
 
     # labels for the ServiceMonitor
     labels: {}
