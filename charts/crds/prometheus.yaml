@@ -10,8 +10,8 @@ spec:
     name: in-cluster
   project: default
   source:
-    #path: charts/kube-prometheus-stack
-    path: charts/prometheus
+    path: charts/kube-prometheus-stack
+    # path: charts/prometheus
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
