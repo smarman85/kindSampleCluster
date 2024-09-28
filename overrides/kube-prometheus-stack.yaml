@@ -1,0 +1,18 @@
+prometheus:
+  additionalServiceMonitors:
+  - name: "k8s-apps"
+    additionalLabels: {}
+    jobLabel: ""
+    targetLabels: []
+    podTargetLabels: []
+    selector: {}
+    namespaceSelector:
+      any: true
+    endpoints:
+      - port: ""
+      - targetPort: ""
+        interval: 30s
+        path: /metrics
+        scheme: http
+        tlsConfig:
+          insecureSkipVerify: false
