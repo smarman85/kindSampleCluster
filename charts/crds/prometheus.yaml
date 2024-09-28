@@ -15,7 +15,7 @@ spec:
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
     helm:
-      valuesFiles:
+      valueFiles:
       - ../../overrides/kube-prometheus-stack.yaml
   syncPolicy:
     automated:
