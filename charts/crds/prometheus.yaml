@@ -14,6 +14,9 @@ spec:
     # path: charts/prometheus
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
+    helm:
+      valuesFiles:
+      - ../../overrides/kube-prometheus-stack.yaml
   syncPolicy:
     automated:
       selfHeal: true

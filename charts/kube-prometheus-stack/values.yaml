@@ -4151,23 +4151,7 @@ prometheus:
   #      - nodes/proxy
   #    verbs: [ "get", "list", "watch" ]
 
-  additionalServiceMonitors:
-  - name: "k8s-apps"
-    additionalLabels: {}
-    jobLabel: ""
-    targetLabels: []
-    podTargetLabels: []
-    selector: {}
-    namespaceSelector:
-      any: true
-    endpoints:
-      - port: ""
-      - targetPort: ""
-        interval: 30s
-        path: /metrics
-        scheme: http
-        tlsConfig:
-          insecureSkipVerify: false
+  additionalServiceMonitors: []
   ## Name of the ServiceMonitor to create
   ##
   # - name: ""
