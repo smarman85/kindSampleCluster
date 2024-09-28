@@ -1152,7 +1152,7 @@ grafana:
     # in grafana.ini
     path: "/metrics"
 
-    namespace: prom  # (defaults to use the namespace this chart is deployed to)
+    #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
 
     # labels for the ServiceMonitor
     labels: {}
@@ -4151,7 +4151,23 @@ prometheus:
   #      - nodes/proxy
   #    verbs: [ "get", "list", "watch" ]
 
-  additionalServiceMonitors: []
+  additionalServiceMonitors:
+  - name: "k8s-apps"
+    additionalLabels: {}
+    jobLabel: ""
+    targetLabels: []
+    podTargetLabels: []
+    selector: {}
+    namespaceSelector:
+      any: true
+    endpoints:
+      - port: ""
+      - targetPort: ""
+        interval: 30s
+        path: /metrics
+        scheme: http
+        tlsConfig:
+          insecureSkipVerify: false
   ## Name of the ServiceMonitor to create
   ##
   # - name: ""
