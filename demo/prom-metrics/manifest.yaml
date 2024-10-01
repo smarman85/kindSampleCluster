@@ -39,3 +39,17 @@ spec:
   selector:
     app: http-server
   type: ClusterIP
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: prometheus-scaledobject
+spec:
+  scaleTargetRef:
+    name: http-server
+  triggers:
+  - type: prometheus
+    metadata:
+      serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring:9090
+      threshold: '163'
+      query: sum(ping_request_count)
