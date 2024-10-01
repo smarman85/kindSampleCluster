@@ -17,6 +17,7 @@ spec:
       containers:
       - name: http-server
         image: smarman/pong:latest
+        command: ["main"]
         resources:
           limits:
             memory: "128Mi"
