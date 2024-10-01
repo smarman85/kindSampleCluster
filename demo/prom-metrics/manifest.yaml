@@ -56,4 +56,4 @@ spec:
     metadata:
       serverAddress: http://prometheus-kube-prometheus-prometheus.monitoring:9090
       threshold: '3'
-      query: sum(ping_request_count)
+      query: sum(rate(ping_request_count[2m]))
