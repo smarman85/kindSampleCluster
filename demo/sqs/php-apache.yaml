@@ -65,6 +65,8 @@ kind: ScaledObject
 metadata:
   name: php-apache-sqs-queue
 spec:
+  maxReplicaCount: 10  # Optional. Default: 100
+  minReplicaCount: 1   # Optional. Default: 0
   scaleTargetRef:
     name: php-apache
   triggers:
