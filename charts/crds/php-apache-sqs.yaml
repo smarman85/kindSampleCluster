@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: php-apache
+  namespace: argocd
+spec:
+  destination:
+    namespace: php-apache 
+    name: in-cluster
+  project: default
+  source:
+    path: demo/sqs
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  revisionHistoryLimit: 2

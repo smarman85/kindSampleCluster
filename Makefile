@@ -131,6 +131,9 @@ localstack-portforward:
 psql-scaler:
 	kubectl apply -f charts/crds/psql-scaler.yaml
 
+sqs-scaler:
+	kubectl apply -f charts/crds/php-apache-sqs.yaml
+
 prometheus:
 	kubectl apply -f charts/crds/prometheus.yaml
 	kubectl wait --for=condition=available deployment/prometheus-server -n monitoring --timeout=30s --timeout=60s

@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-apache
+spec:
+  selector:
+    matchLabels:
+      run: php-apache
+  template:
+    metadata:
+      labels:
+        run: php-apache
+    spec:
+      containers:
+      - name: php-apache
+        image: registry.k8s.io/hpa-example
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-apache
+  labels:
+    run: php-apache
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: php-apache
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-secrets
+data:
+  AWS_ACCESS_KEY_ID: "ZHVtbXktYWNjZXNzLWtleQ==" # Required. fake creds for localstack
+  AWS_SECRET_ACCESS_KEY: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
+  AWS_SESSION_TOKEN: "ZHVtbXktc2VjcmV0LWtleQ=="
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-aws-credentials
+spec:
+  secretTargetRef:
+  - parameter: awsAccessKeyID     # Required.
+    name: test-secrets            # Required.
+    key: AWS_ACCESS_KEY_ID        # Required.
+  - parameter: awsSecretAccessKey # Required.
+    name: test-secrets            # Required.
+    key: AWS_SECRET_ACCESS_KEY    # Required.
+  - parameter: awsSessionToken    # Required when using temporary credentials.
+    name: test-secrets            # Required when using temporary credentials.
+    key: AWS_SESSION_TOKEN        # Required when using temporary credentials.
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: php-apache-sqs-queue
+spec:
+  scaleTargetRef:
+    name: php-apache
+  triggers:
+  - type: aws-sqs-queue
+    authenticationRef:
+      name: keda-trigger-auth-aws-credentials
+    metadata:
+      queueURL: "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/localstack-queue"
+      queueLength: "3"
+      awsRegion: "us-east-1"
+      awsEndpoint: "http://localstack.localstack:4566"
