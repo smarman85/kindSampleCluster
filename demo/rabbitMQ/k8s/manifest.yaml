@@ -51,6 +51,9 @@ spec:
             cpu: 200m
       - name: rmq-go
         image: golang:1.23-bookworm
+        tty: true
+        stdin: true
+        command: ["/bin/bash"]
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: user 
