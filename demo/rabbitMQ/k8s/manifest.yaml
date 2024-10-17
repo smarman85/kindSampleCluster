@@ -50,7 +50,7 @@ spec:
           requests:
             cpu: 200m
 ---
-apiVersion: v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rmq-go
