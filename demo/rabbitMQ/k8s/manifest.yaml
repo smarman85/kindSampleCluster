@@ -5,6 +5,17 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAMC4wLjAuMDo4MDkxLw== # local testing only
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-rabbitmq-conn
+spec:
+  secretTargetRef:
+    - parameter: amqpString
+      name: rmq-secret
+      key: amqpString
 ---
 apiVersion: v1
 kind: Service
@@ -49,6 +60,23 @@ spec:
             cpu: 500m
           requests:
             cpu: 200m
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rabbitmq-scaledobject
+spec:
+  scaleTargetRef:
+    name: rmq-go
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: hello
+      mode: QueueLength
+      value: "4"
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
 ---
 apiVersion: apps/v1
 kind: Deployment
