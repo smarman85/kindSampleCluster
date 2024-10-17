@@ -116,7 +116,6 @@ hpa-argo:
 hpa-loadgen:
 	kubectl run -i --tty load-generator --rm -n php-apache --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
 
-
 keda-install:
 	kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.15.1/keda-2.15.1-core.yaml
 
@@ -153,4 +152,4 @@ http-metrics:
 rabbitmq:
 	kubectl apply -f charts/crds/rabbitMq.yaml
 	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
-	kubectl port-forward -n prom svc/rmq-svc 8091:80 &
+	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:80 &

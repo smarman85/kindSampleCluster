@@ -49,6 +49,21 @@ spec:
             cpu: 500m
           requests:
             cpu: 200m
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: rmq-go
+spec:
+  selector:
+    matchLabels:
+      app: rmq-go
+  template:
+    metadata:
+      labels:
+        app: rmq-go
+    spec:
+      containers:
       - name: rmq-go
         image: golang:1.23-bookworm
         tty: true
