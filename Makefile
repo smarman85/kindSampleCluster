@@ -149,3 +149,8 @@ http-metrics:
 	kubectl apply -f charts/crds/prom-metrics.yaml
 	kubectl wait --for=condition=available deployment/http-server -n prom --timeout=30s --timeout=60s
 	kubectl port-forward -n prom svc/http-server 8090:80 &
+
+rabbitmq:
+	kubectl apply -f charts/crds/rabbitMq.yaml
+	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
+	kubectl port-forward -n prom svc/rmq-svc 8091:80 &

@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rmq-secret
+data:
+  password: cGFzc3dvcmQ= # hit it's 'password'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rmq-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 5672
+  selector:
+    app: rmq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rmq
+spec:
+  selector:
+    matchLabels:
+      app: rmq
+  template:
+    metadata:
+      labels:
+        app: rmq
+    spec:
+      containers:
+      - name: rmq
+        image: rabbitmq:4.0.2
+        ports:
+        - containerPort: 5672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: user 
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rmq-secret 
+              key: password
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+      - name: rmq-go
+        image: golang:1.23.bookworm
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: user 
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: rmq-secret 
+              key: password
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
