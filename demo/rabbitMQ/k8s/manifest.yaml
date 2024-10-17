@@ -50,7 +50,7 @@ spec:
           requests:
             cpu: 200m
       - name: rmq-go
-        image: golang:1.23.bookworm
+        image: golang:1.23-bookworm
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: user 
