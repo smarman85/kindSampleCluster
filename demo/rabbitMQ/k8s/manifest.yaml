@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yzo1NjcyLw== # local testing only
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -84,13 +84,13 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      protocol: http
+      protocol: amqp
       queueName: hello
       mode: QueueLength
       value: "4"
       vhostName: /
-      hostFromEnv: DB_STRING
-      #hostFromEnv: DB_STRING-AMQP
+      #hostFromEnv: DB_STRING
+      hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
