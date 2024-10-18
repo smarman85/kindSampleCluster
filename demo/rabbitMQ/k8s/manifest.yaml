@@ -81,8 +81,8 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
-      hostFromEnv: DB_STRING
-      #hostFromEnv: DB_STRING-AMQP
+      #hostFromEnv: DB_STRING
+      hostFromEnv: DB_STRING-AMQP
       unsafeSsl: true
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
