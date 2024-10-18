@@ -6,7 +6,7 @@ metadata:
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
   amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yzo1NjcyLw== # local testing only
-  httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yzo1NjcyLw== # local testing only
+  httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2YzoxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
