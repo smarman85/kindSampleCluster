@@ -123,7 +123,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: rmq-secret 
-              key: httpString
+              key: amqpString
         resources:
           limits:
             cpu: 500m
