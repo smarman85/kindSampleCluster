@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5zdmM6ODAv # local testing only
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5zdmM6NTY3Mg== # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
@@ -33,6 +33,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rmq
+  labels:
+    app: rmq
 spec:
   selector:
     matchLabels:
