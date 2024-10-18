@@ -75,6 +75,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
+      hostFromEnv: DB_STRING
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
@@ -105,6 +106,11 @@ spec:
             secretKeyRef:
               name: rmq-secret 
               key: password
+        - name: DB_STRING
+          valueFrom:
+            secretKeyRef:
+              name: rmq-secret 
+              key: amqpString
         resources:
           limits:
             cpu: 500m
