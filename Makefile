@@ -149,7 +149,18 @@ http-metrics:
 	kubectl wait --for=condition=available deployment/http-server -n prom --timeout=30s --timeout=60s
 	kubectl port-forward -n prom svc/http-server 8090:80 &
 
+rabbitmq-ns:
+	kubectl create namespace rabbitmq
+
 rabbitmq:
 	kubectl apply -f charts/crds/rabbitMq.yaml
 	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
 	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:5672 &
+
+rabbitmq-setup: init-basic argocd-ui metrics-server rabbitmq
+
+rabbitmq-send: 
+	./demo/rabbitMQ/sender/sender
+
+rabbitmq-send: 
+	./demo/rabbitMQ/receiver/receiver
