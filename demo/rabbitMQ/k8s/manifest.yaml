@@ -59,6 +59,8 @@ spec:
         - containerPort: 5672
         - containerPort: 15672
         env:
+        - name: RABBITMQ_MANAGEMENT_ENABLED
+          value: "true"
         - name: RABBITMQ_DEFAULT_USER
           value: user 
         - name: RABBITMQ_DEFAULT_PASS
@@ -86,6 +88,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
+      vhostName: /
       hostFromEnv: DB_STRING
       #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
