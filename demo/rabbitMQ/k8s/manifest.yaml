@@ -77,7 +77,7 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      protocol: auto
+      protocol: amqp
       queueName: hello
       mode: QueueLength
       value: "4"
