@@ -152,4 +152,4 @@ http-metrics:
 rabbitmq:
 	kubectl apply -f charts/crds/rabbitMq.yaml
 	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
-	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:80 &
+	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:5672 &

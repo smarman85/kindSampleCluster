@@ -76,7 +76,7 @@ spec:
       protocol: amqp
       queueName: hello
       mode: QueueLength
-      value: "4"
+      activationValue: "4"
       hostFromEnv: DB_STRING
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
