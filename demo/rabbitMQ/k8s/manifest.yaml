@@ -76,7 +76,6 @@ spec:
       protocol: amqp
       queueName: hello
       mode: QueueLength
-      activationValue: "4"
       value: "4"
       hostFromEnv: DB_STRING
     authenticationRef:
