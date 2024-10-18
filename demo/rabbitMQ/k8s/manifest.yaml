@@ -28,8 +28,12 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 5672
+  - name: amqp 
+    port: 5672
     targetPort: 5672
+  - name: mgnt 
+    port: 15672
+    targetPort: 15672
   selector:
     app: rmq
 ---
@@ -53,6 +57,7 @@ spec:
         image: rabbitmq:4.0.2
         ports:
         - containerPort: 5672
+        - containerPort: 15672
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: user 
@@ -77,12 +82,12 @@ spec:
   triggers:
   - type: rabbitmq
     metadata:
-      protocol: auto
+      protocol: http
       queueName: hello
       mode: QueueLength
       value: "4"
-      #hostFromEnv: DB_STRING
-      hostFromEnv: DB_STRING-AMQP
+      hostFromEnv: DB_STRING
+      #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
