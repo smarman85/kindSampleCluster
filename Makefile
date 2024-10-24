@@ -162,5 +162,5 @@ rabbitmq-setup: init-basic argocd-ui metrics-server rabbitmq
 rabbitmq-send: 
 	./demo/rabbitMQ/sender/sender
 
-rabbitmq-send: 
+rabbitmq-receive: 
 	./demo/rabbitMQ/receiver/receiver

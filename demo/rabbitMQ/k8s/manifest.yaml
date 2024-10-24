@@ -79,6 +79,8 @@ kind: ScaledObject
 metadata:
   name: rabbitmq-scaledobject
 spec:
+  minReplicaCount: 1
+  maxReplicaCount:  3
   scaleTargetRef:
     name: rmq-go
   triggers:
