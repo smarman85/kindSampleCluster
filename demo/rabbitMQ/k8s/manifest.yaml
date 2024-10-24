@@ -19,7 +19,7 @@ spec:
     #   key: httpString
     - parameter: host
       name: rmq-secret
-      key: amqpString
+      key: host
 ---
 apiVersion: v1
 kind: Service
@@ -90,9 +90,9 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
-      vHostName: /
+      #vHostName: /
       #hostFromEnv: DB_STRING
-      hostFromEnv: DB_STRING-AMQP
+      #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
