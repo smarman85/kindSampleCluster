@@ -19,7 +19,7 @@ spec:
       key: httpString
     - parameter: amqpString
       name: rmq-secret
-      key: amqpString
+      key: host
 ---
 apiVersion: v1
 kind: Service
@@ -90,7 +90,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
-      vHostName: /
+      #vHostName: /
       #hostFromEnv: DB_STRING
       #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
@@ -128,11 +128,11 @@ spec:
         #    secretKeyRef:
         #      name: rmq-secret 
         #      key: httpString
-        #- name: DB_STRING-AMQP
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: rmq-secret 
-        #      key: amqpString
+        - name: DB_STRING-AMQP
+          valueFrom:
+            secretKeyRef:
+              name: rmq-secret 
+              key: amqpString
         resources:
           limits:
             cpu: 500m
