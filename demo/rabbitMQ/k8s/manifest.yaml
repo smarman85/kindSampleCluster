@@ -90,7 +90,7 @@ spec:
       value: "4"
       vhostName: /
       #hostFromEnv: DB_STRING
-      hostFromEnv: DB_STRING-AMQP
+      #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
@@ -121,16 +121,16 @@ spec:
             secretKeyRef:
               name: rmq-secret 
               key: password
-        - name: DB_STRING
-          valueFrom:
-            secretKeyRef:
-              name: rmq-secret 
-              key: httpString
-        - name: DB_STRING-AMQP
-          valueFrom:
-            secretKeyRef:
-              name: rmq-secret 
-              key: amqpString
+        #- name: DB_STRING
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: rmq-secret 
+        #      key: httpString
+        #- name: DB_STRING-AMQP
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: rmq-secret 
+        #      key: amqpString
         resources:
           limits:
             cpu: 500m
