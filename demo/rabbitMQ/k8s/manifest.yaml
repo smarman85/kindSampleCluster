@@ -76,7 +76,8 @@ spec:
     spec:
       containers:
       - name: rmq
-        image: rabbitmq:4.0.2
+        #image: rabbitmq:4.0.2
+        image: rabbitmq:3-management-alpine
         ports:
         - containerPort: 5672
         - containerPort: 15672
