@@ -17,9 +17,9 @@ spec:
     # - parameter: httpString
     #   name: rmq-secret
     #   key: httpString
-    - parameter: host   # expected parameter for Scaled object
+    - parameter: amqpString   # expected parameter for Scaled object
       name: rmq-secret  # name of the secret to find the value
-      key: amqpString   # key for the secret in the k8s secret
+      key: host   # key for the secret in the k8s secret
 ---
 apiVersion: v1
 kind: Service
