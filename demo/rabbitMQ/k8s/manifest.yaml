@@ -1,3 +1,4 @@
+
 ---
 apiVersion: v1
 kind: Secret
@@ -5,7 +6,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -17,9 +18,9 @@ spec:
     - parameter: httpString
       name: rmq-secret
       key: httpString
-    - parameter: host
+    - parameter: amqpString
       name: rmq-secret
-      key: host
+      key: amqpString
 ---
 apiVersion: v1
 kind: Service
@@ -81,17 +82,13 @@ metadata:
 spec:
   scaleTargetRef:
     name: rmq-go
-  # cooldownPeriod:   20                                      # Optional. Default: 20 seconds
-  # initialCooldownPeriod:  0                                 # Optional. Default: 0 seconds
-  minReplicaCount:  1                                       # Optional. Default: 0
-  maxReplicaCount:  8
   triggers:
   - type: rabbitmq
     metadata:
       protocol: amqp
       queueName: hello
       mode: QueueLength
-      value: "1"
+      value: "4"
       vhostName: /
       #hostFromEnv: DB_STRING
       hostFromEnv: DB_STRING-AMQP
@@ -140,3 +137,4 @@ spec:
             cpu: 500m
           requests:
             cpu: 200m
+
