@@ -81,8 +81,8 @@ metadata:
 spec:
   scaleTargetRef:
     name: rmq-go
-  cooldownPeriod:   20                                      # Optional. Default: 20 seconds
-  initialCooldownPeriod:  0                                 # Optional. Default: 0 seconds
+  # cooldownPeriod:   20                                      # Optional. Default: 20 seconds
+  # initialCooldownPeriod:  0                                 # Optional. Default: 0 seconds
   minReplicaCount:  1                                       # Optional. Default: 0
   maxReplicaCount:  8
   triggers:
@@ -92,7 +92,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "1"
-      #vhostName: /
+      vhostName: /
       #hostFromEnv: DB_STRING
       #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
