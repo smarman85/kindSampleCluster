@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -17,7 +17,7 @@ spec:
     # - parameter: httpString
     #   name: rmq-secret
     #   key: httpString
-    - parameter: amqpString   # expected parameter for Scaled object
+    - parameter: host   # expected parameter for Scaled object
       name: rmq-secret  # name of the secret to find the value
       key: host   # key for the secret in the k8s secret
 ---
