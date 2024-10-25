@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -19,7 +19,29 @@ spec:
     #  key: httpString
     - parameter: host
       name: rmq-secret
-      key: amqpString
+      key: host
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rabbitmq-scaledobject
+spec:
+  scaleTargetRef:
+    name: rmq-go
+  minReplicaCount:  1                                       # Optional. Default: 0
+  maxReplicaCount:  10
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: hello
+      mode: QueueLength
+      value: "4"
+      #vhostName: /
+      #hostFromEnv: DB_STRING
+      #hostFromEnv: DB_STRING-AMQP
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
 ---
 apiVersion: v1
 kind: Service
@@ -74,28 +96,6 @@ spec:
           requests:
             cpu: 200m
 ---
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: rabbitmq-scaledobject
-spec:
-  scaleTargetRef:
-    name: rmq-go
-  minReplicaCount:  1                                       # Optional. Default: 0
-  maxReplicaCount:  10
-  triggers:
-  - type: rabbitmq
-    metadata:
-      protocol: amqp
-      queueName: hello
-      mode: QueueLength
-      value: "4"
-      #vhostName: /
-      #hostFromEnv: DB_STRING
-      #hostFromEnv: DB_STRING-AMQP
-    authenticationRef:
-      name: keda-trigger-auth-rabbitmq-conn
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -132,7 +132,8 @@ spec:
           valueFrom:
             secretKeyRef:
               name: rmq-secret 
-              key: amqpString
+              key: host
+              #key: amqpString
         resources:
           limits:
             cpu: 500m
