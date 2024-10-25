@@ -20,8 +20,8 @@ spec:
     - parameter: host
       name: rmq-secret
       key: amqpString
-  advanced:
-    restoreToOriginalReplicaCount: true
+  #advanced:
+  #  restoreToOriginalReplicaCount: true
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
