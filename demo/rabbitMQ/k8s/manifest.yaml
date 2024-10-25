@@ -5,8 +5,8 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
-  # httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
@@ -17,9 +17,9 @@ spec:
     # - parameter: httpString
     #   name: rmq-secret
     #   key: httpString
-    - parameter: host
-      name: rmq-secret
-      key: host
+    - parameter: host   # expected parameter for Scaled object
+      name: rmq-secret  # name of the secret to find the value
+      key: amqpString   # key for the secret in the k8s secret
 ---
 apiVersion: v1
 kind: Service
