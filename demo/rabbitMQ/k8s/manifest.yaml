@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -19,7 +19,7 @@ spec:
       key: httpString
     - parameter: host
       name: rmq-secret
-      key: host
+      key: amqpString
 ---
 apiVersion: v1
 kind: Service
@@ -134,7 +134,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: rmq-secret 
-              key: host
+              key: amqpString
         resources:
           limits:
             cpu: 500m
