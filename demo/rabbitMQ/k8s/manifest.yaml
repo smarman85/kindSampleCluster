@@ -91,7 +91,7 @@ spec:
       protocol: amqp
       queueName: hello
       mode: QueueLength
-      value: "4"
+      value: "1"
       vhostName: /
       #hostFromEnv: DB_STRING
       hostFromEnv: DB_STRING-AMQP
