@@ -92,9 +92,9 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "1"
-      vhostName: /
+      #vhostName: /
       #hostFromEnv: DB_STRING
-      #hostFromEnv: DB_STRING-AMQP
+      hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
