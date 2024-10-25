@@ -81,7 +81,7 @@ metadata:
 spec:
   scaleTargetRef:
     name: rmq-go
-  cooldownPeriod:   300                                     # Optional. Default: 300 seconds
+  cooldownPeriod:   30                                     # Optional. Default: 300 seconds
   initialCooldownPeriod:  0                                 # Optional. Default: 0 seconds
   minReplicaCount:  1                                       # Optional. Default: 0
   maxReplicaCount:  8
