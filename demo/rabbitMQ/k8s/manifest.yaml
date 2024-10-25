@@ -14,12 +14,12 @@ metadata:
   name: keda-trigger-auth-rabbitmq-conn
 spec:
   secretTargetRef:
-    # - parameter: httpString
-    #   name: rmq-secret
-    #   key: httpString
-    - parameter: amqpString   # expected parameter for Scaled object
-      name: rmq-secret  # name of the secret to find the value
-      key: amqpString   # key for the secret in the k8s secret
+    - parameter: httpString
+      name: rmq-secret
+      key: httpString
+    - parameter: amqpString
+      name: rmq-secret
+      key: amqpString
 ---
 apiVersion: v1
 kind: Service
@@ -79,9 +79,6 @@ kind: ScaledObject
 metadata:
   name: rabbitmq-scaledobject
 spec:
-  cooldownPeriod: 100
-  minReplicaCount: 1
-  maxReplicaCount: 3
   scaleTargetRef:
     name: rmq-go
   triggers:
@@ -91,7 +88,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
-      vHostName: /
+      vhostName: /
       #hostFromEnv: DB_STRING
       hostFromEnv: DB_STRING-AMQP
     authenticationRef:
@@ -124,11 +121,11 @@ spec:
             secretKeyRef:
               name: rmq-secret 
               key: password
-        #- name: DB_STRING
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: rmq-secret 
-        #      key: httpString
+        - name: DB_STRING
+          valueFrom:
+            secretKeyRef:
+              name: rmq-secret 
+              key: httpString
         - name: DB_STRING-AMQP
           valueFrom:
             secretKeyRef:
