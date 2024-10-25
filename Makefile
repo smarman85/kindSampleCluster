@@ -70,7 +70,7 @@ yopass-install:
 	kubectl port-forward service/yopass 1337:1337 -n yopass &
 
 metrics-server:
-	kubectl apply -f ./config/components.yaml
+	kubectl apply -f charts/crds/metrics-server.yaml -n argocd
 
 webhook-tf:
 	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
