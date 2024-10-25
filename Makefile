@@ -157,7 +157,7 @@ rabbitmq:
 	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
 	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:5672 &
 
-rabbitmq-setup: init-basic argocd-ui metrics-server rabbitmq
+rabbitmq-setup: init-basic argocd-ui metrics-server keda-install rabbitmq
 
 rabbitmq-send: 
 	./demo/rabbitMQ/sender/sender
