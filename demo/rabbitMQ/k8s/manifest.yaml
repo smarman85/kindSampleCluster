@@ -5,7 +5,7 @@ metadata:
   name: rmq-secret
 data:
   password: cGFzc3dvcmQ= # hit it's 'password'
-  amqpString: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
+  host: YW1xcDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcTo1NjcyLw== # local testing only
   httpString: aHR0cDovL3VzZXI6cGFzc3dvcmRAcm1xLXN2Yy5yYWJiaXRtcToxNTY3Mi8= # local testing only
 ---
 apiVersion: keda.sh/v1alpha1
@@ -17,9 +17,9 @@ spec:
     - parameter: httpString
       name: rmq-secret
       key: httpString
-    - parameter: amqpString
+    - parameter: host
       name: rmq-secret
-      key: amqpString
+      key: host
 ---
 apiVersion: v1
 kind: Service
@@ -92,9 +92,9 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "1"
-      vhostName: /
+      #vhostName: /
       #hostFromEnv: DB_STRING
-      hostFromEnv: DB_STRING-AMQP
+      #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---
