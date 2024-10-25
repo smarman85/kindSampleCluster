@@ -80,7 +80,7 @@ metadata:
   name: rabbitmq-scaledobject
 spec:
   minReplicaCount: 1
-  maxReplicaCount:  3
+  maxReplicaCount: 3
   scaleTargetRef:
     name: rmq-go
   triggers:
@@ -90,7 +90,7 @@ spec:
       queueName: hello
       mode: QueueLength
       value: "4"
-      vHostName: /
+      #vHostName: /
       #hostFromEnv: DB_STRING
       #hostFromEnv: DB_STRING-AMQP
     authenticationRef:
