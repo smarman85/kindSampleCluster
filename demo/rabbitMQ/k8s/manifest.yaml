@@ -79,6 +79,7 @@ kind: ScaledObject
 metadata:
   name: rabbitmq-scaledobject
 spec:
+  cooldownPeriod: 100
   minReplicaCount: 1
   maxReplicaCount: 3
   scaleTargetRef:
