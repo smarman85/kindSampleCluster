@@ -17,9 +17,9 @@ spec:
     - parameter: httpString
       name: rmq-secret
       key: httpString
-    - parameter: host
+    - parameter: amqpString
       name: rmq-secret
-      key: amqpString
+      key: host
 ---
 apiVersion: v1
 kind: Service
