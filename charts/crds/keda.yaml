@@ -18,4 +18,29 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+    - ServerSideApply=true
   revisionHistoryLimit: 2
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: keda
+  namespace: argocd
+spec:
+  description: "keda project"
+  sourceRepos:
+  - 'balh'
+  destinations:
+  - namespace: 'keda'
+    server: https://kubernetes.default.svc
+  - namespace: 'kube-system'
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  namespaceResourceWhitelist:
+  - group: "*"
+    kind: "*"
+  roles:
+  orphanedResources:
+    warn: true
