@@ -156,9 +156,14 @@ rabbitmq-ns:
 rabbitmq:
 	kubectl apply -f charts/crds/rabbitMq.yaml
 	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
-	kubectl port-forward -n rabbitmq svc/rmq-svc 8091:5672 &
+	kubectl port-forward -n rabbitmq svc/rmq-svc 5672:5672 &
 
 rabbitmq-setup: init-basic argocd-ui metrics-server keda-install rabbitmq
+
+rabbitmq-ui:
+	kubectl wait --for=condition=available deployment/rmq -n rabbitmq --timeout=30s --timeout=60s
+	kubectl port-forward -n rabbitmq svc/rmq-svc 15672:15672 &
+	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:15672"
 
 rabbitmq-send: 
 	./demo/rabbitMQ/sender/sender
