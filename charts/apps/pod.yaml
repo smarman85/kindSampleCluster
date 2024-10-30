@@ -4,8 +4,6 @@ kind: Application
 metadata:
   name: web-pod
   namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: web-test 
@@ -21,4 +19,4 @@ spec:
       allowEmpty: false
     syncOptions:
     - CreateNamespace=true
-  revisionHistoryLimit: 2
+  revisionHistoryLimit: 1
