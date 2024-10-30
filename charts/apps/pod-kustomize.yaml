@@ -13,9 +13,10 @@ spec:
     path: charts/kustomize/pods/overlays/qa
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
-    # kustomize:
-    #   images:
-    #   - golang:1.20-bullseye
+    kustomize:
+      images:
+      #- golang:1.20-bullseye
+      - golang:1.23-bullseye
   syncPolicy:
     automated:
       selfHeal: true
