@@ -16,7 +16,7 @@ spec:
     kustomize:
       images:
       - golang:1.23.2-alpine3.20
-      nameSuffix: alpine
+      nameSuffix: -alpine
       patches:
         - target:
             kind: Pod
