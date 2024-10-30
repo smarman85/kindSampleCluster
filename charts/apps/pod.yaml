@@ -1,0 +1,24 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-pod
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: web-test 
+    name: in-cluster
+  project: default
+  source:
+    path: helm/podManifest
+    repoURL: https://github.com/smarman85/infra101.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+  revisionHistoryLimit: 2
