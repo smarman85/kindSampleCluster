@@ -26,7 +26,7 @@ spec:
               path: /metadata/labels/needone
               value: alpine
             - op: replace
-              path: /spec/container/0/command
+              path: /spec/containers/0/command
               value: ["/bin/sh"]
   syncPolicy:
     automated:
