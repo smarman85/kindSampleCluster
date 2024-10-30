@@ -1,0 +1,37 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pod-km-app 
+  namespace: argocd
+spec:
+  destination:
+    namespace: pod-km-app
+    name: in-cluster
+  project: default
+  source:
+    path: charts/kustomize/pods/overlays/qa
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
+    targetRevision: HEAD
+    kustomize:
+      images:
+      - golang:1.23.2-alpine3.20
+      nameSuffix: alpine
+      patches:
+        - target:
+            kind: Pod
+            name: seanpod
+          patch: |-
+            - op: replace
+              path: /metadata/labels/needone
+              value: alpine
+            - op: replace
+              path: /spec/container/0/command
+              value: ["/bin/sh"]
+  syncPolicy:
+    automated:
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+  revisionHistoryLimit: 1
