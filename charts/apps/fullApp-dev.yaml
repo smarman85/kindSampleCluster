@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fullapp-1.20-bullseye
+  name: fullapp-1-20-bullseye
   namespace: argocd
 spec:
   destination:
@@ -16,32 +16,32 @@ spec:
     kustomize:
       images:
       - golang:1.20-bullseye
-      nameSuffix: -1.20-bullseye
+      nameSuffix: -1-20-bullseye
       patches:
         - patch: |-
             - op: replace
               path: /spec/rules/0/host
-              value: fullapp-1.20-bullseye.qa.com
+              value: fullapp-1-20-bullseye.qa.com
           target:
             kind: Ingress
             name: fullapp-ingress
         - patch: |-
             - op: replace
               path: /spec/selector/matchLabels/app
-              value: fullapp-1.20-bullseye
+              value: fullapp-1-20-bullseye
             - op: replace
               path: /spec/template/metadata/labels/app
-              value: fullapp-1.20-bullseye
+              value: fullapp-1-20-bullseye
             - op: replace
               path: /spec/template/spec/affinity/podAntiAffinity/requiredDuringSchedulingIgnoredDuringExecution/0/labelSelector/matchLabels/name
-              value: fullapp-1.20-bullseye
+              value: fullapp-1-20-bullseye
           target:
             kind: Deployment
             name: fullapp
         - patch: |-
             - op: replace
               path: /spec/selector/app
-              value: fullapp-1.20-bullseye
+              value: fullapp-1-20-bullseye
           target:
             kind: Service
             name: fullapp-service
