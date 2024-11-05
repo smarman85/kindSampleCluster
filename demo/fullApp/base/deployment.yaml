@@ -40,7 +40,7 @@ spec:
         ports:
           - containerPort: 3000
         # Run your application command after sourcing env file or use the env file to your convenience
-        command: ['/bin/bash']
+        command: ['/bin/sh']
         args: []
         envFrom:
           - configMapRef:
