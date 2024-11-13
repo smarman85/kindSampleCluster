@@ -76,7 +76,7 @@ webhook-tf:
 	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
 	kubectl apply -n argo-events -f ./demo/webhook-tf/install.yaml
 	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
-	# kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
+	kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
 
 webhook-demo:
 	curl -d '{"vControl":"bitbucket.org","repoOwner":"instadevelopers", "repo": "n1-iac","sha": "6051b943b22b04f7fe92b64e0c7694ea4832d0b1"}' -H "Content-Type: application/json" -X POST http://localhost:12000/tf
