@@ -12,6 +12,7 @@ rules:
   - argoproj.io
   resources:
   - workflowtaskresults
+  - workflows
   verbs:
   - create
   - patch

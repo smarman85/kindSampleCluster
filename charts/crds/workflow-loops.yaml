@@ -9,7 +9,7 @@ metadata:
     meta.helm.sh/release-namespace: argocd
 spec:
   destination:
-    namespace: workflow-loops
+    namespace: argo-events
     server: https://kubernetes.default.svc
   project: default
   source:

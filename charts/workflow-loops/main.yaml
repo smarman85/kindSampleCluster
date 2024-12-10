@@ -54,7 +54,7 @@ spec:
                     parameters:
                     - name: content_id
                   steps:
-                  - - name: process_ids
+                  - - name: process-ids
                       template: whalesay
                       arguments:
                         parameters:
