@@ -47,7 +47,7 @@ spec:
                   parameters:
                   - name: content_id
                     # the value will get overridden by event payload from test-dep
-                    value: '[1,2,3,4,5]'
+                    value: [1,2,3,4,5]
                 templates:
                 - name: whalesay-loop
                   inputs:
@@ -72,7 +72,7 @@ spec:
           parameters:
             - src:
                 dependencyName: test-dep
-                dataKey: body
+                dataKey: body.content_id
               dest: spec.arguments.parameters.0.value
 ---
 apiVersion: argoproj.io/v1alpha1
