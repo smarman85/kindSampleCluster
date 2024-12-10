@@ -1,0 +1,87 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: webhook
+spec:
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
+  webhook:
+    # event-source can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
+    example:
+      # port to run HTTP server on
+      port: "12000"
+      # endpoint to listen to
+      endpoint: /example
+      # HTTP request method to allow. In this case, only POST requests are accepted
+      method: POST
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: webhook
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: test-dep
+      eventSourceName: webhook
+      eventName: example
+  triggers:
+    - template:
+        name: webhook-workflow-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: webhook-
+              spec:
+                entrypoint: whalesay-loop
+                arguments:
+                  parameters:
+                  - name: content_id
+                    # the value will get overridden by event payload from test-dep
+                    value: '[1,2,3,4,5]'
+                templates:
+                - name: whalesay-loop
+                  inputs:
+                    parameters:
+                    - name: content_id
+                  steps:
+                  - - name: process_ids
+                      template: whalesay
+                      arguments:
+                        parameters:
+                        - name: id
+                          value: "{{item}}"
+                      withParam: "{{inputs.parameters.content_id}}"
+                - name: whalesay
+                  inputs:
+                    parameters:
+                    - name: id
+                  container:
+                    image: docker/whalesay:latest
+                    command: [cowsay]
+                    args: ["hello world content id: {{inputs.parameters.id}}"]
+          parameters:
+            - src:
+                dependencyName: test-dep
+                dataKey: body
+              dest: spec.arguments.parameters.0.value
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+spec:
+  nats:
+    native:
+      # Optional, defaults to 3. If it is < 3, set it to 3, that is the minimal requirement.
+      replicas: 3
+      # Optional, authen strategy, "none" or "token", defaults to "none"
+      auth: token
