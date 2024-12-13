@@ -45,30 +45,38 @@ spec:
                 entrypoint: whalesay-loop
                 arguments:
                   parameters:
-                  - name: content_id
+                  - name: payload
                     # the value will get overridden by event payload from test-dep
-                    value: [1,2,3,4,5]
+                    # value: [1,2,3,4,5]
+                    value: |
+                      [
+                        {"name": "foo", "content_ids": [1,2,3,4,5]},
+                        {"name": "bar", "content_ids": [6,7,8,9,10]},
+                      ]
                 templates:
                 - name: whalesay-loop
                   inputs:
                     parameters:
-                    - name: content_id
+                    - name: payload
                   steps:
                   - - name: process-ids
                       template: whalesay
                       arguments:
                         parameters:
+                        - name: job
+                          value: "{{item.name}}"
                         - name: id
-                          value: "{{item}}"
-                      withParam: "{{inputs.parameters.content_id}}"
+                          value: "{{item.content_ids}}"
+                      withParam: "{{inputs.parameters.payload}}"
                 - name: whalesay
                   inputs:
                     parameters:
-                    - name: id
+                    - name: job
+                    - name: content_ids
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["hello world content id: {{inputs.parameters.id}}"]
+                    args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.content_ids}}"]
           #parameters:
           #  - src:
           #      dependencyName: test-dep

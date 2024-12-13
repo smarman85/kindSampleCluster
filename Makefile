@@ -170,3 +170,14 @@ rabbitmq-send:
 
 rabbitmq-receive: 
 	./demo/rabbitMQ/receiver/receiver
+
+webhook-loop-infra:
+	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
+	kubectl apply -n argo-events -f ./charts/workflow-loops/main.yaml
+
+webhook-loop-portforward:
+	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
+	kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
+
+demo-webhook-loop:
+	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
