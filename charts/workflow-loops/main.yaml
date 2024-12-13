@@ -63,29 +63,25 @@ spec:
                       template: whalesay
                       arguments:
                         parameters:
-                        - name: name
+                        - name: job
                           value: "{{item.name}}"
-                        - name: content_ids
+                        - name: id
                           value: "{{item.content_ids}}"
                       withParam: "{{inputs.parameters.payload}}"
                 - name: whalesay
                   inputs:
                     parameters:
-                    - name: name
+                    - name: job
                     - name: content_ids
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["hello world {{inputs.parameters.name}} id: {{inputs.parameters.content_ids}}"]
+                    args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.id}}"]
           #parameters:
           #  - src:
           #      dependencyName: test-dep
-          #      dataKey: name
+          #      dataKey: body.content_id
           #    dest: spec.arguments.parameters.0.value
-          #  - src:
-          #      dependencyName: test-dep
-          #      dataKey: content_ids
-          #    dest: spec.arguments.parameters.1.value
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: EventBus
