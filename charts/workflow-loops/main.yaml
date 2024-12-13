@@ -32,7 +32,7 @@ spec:
   triggers:
     - template:
         name: webhook-workflow-trigger
-        conditions: test-dep
+        #conditions: test-dep
         k8s:
           operation: create
           source:
