@@ -25,10 +25,10 @@ metadata:
 spec:
   template:
     #serviceAccountName: operate-workflow-sa
-  # dependencies:
-  #   - name: test-dep
-  #     eventSourceName: webhook
-  #     eventName: example
+  dependencies:
+    - name: test-dep
+      eventSourceName: webhook
+      eventName: example
   triggers:
     - template:
         name: webhook-workflow-trigger
@@ -77,11 +77,11 @@ spec:
                     image: docker/whalesay:latest
                     command: [cowsay]
                     args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.content_ids}}"]
-          # parameters:
-          #   - src:
-          #       dependencyName: test-dep
-          #       dataKey: body.content_id
-          #     dest: spec.arguments.parameters.0.value
+          parameters:
+            - src:
+                dependencyName: test-dep
+                dataKey: body.content_id
+              dest: spec.arguments.parameters.0.value
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: EventBus
