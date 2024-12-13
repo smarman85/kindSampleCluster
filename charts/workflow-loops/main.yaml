@@ -71,12 +71,12 @@ spec:
                 - name: whalesay
                   inputs:
                     parameters:
-                    - name: job
+                    - name: name
                     - name: content_ids
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.content_ids}}"]
+                    args: ["hello world {{inputs.parameters.name}} id: {{inputs.parameters.content_ids}}"]
           #parameters:
           #  - src:
           #      dependencyName: test-dep
