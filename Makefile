@@ -172,7 +172,8 @@ rabbitmq-receive:
 	./demo/rabbitMQ/receiver/receiver
 
 webhook-loop-infra:
-	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
+	#kubectl apply -n argo-events -f ./config/webhook-cm.yaml
+	kubectl apply -n argo-events -f ./charts/infra/argo-events/workflow-rbac.yaml
 	kubectl apply -n argocd -f ./charts/crds/workflow-loops.yaml
 
 webhook-loop-portforward:
