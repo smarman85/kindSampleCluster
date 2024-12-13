@@ -47,7 +47,7 @@ spec:
                   parameters:
                   - name: payload
                     # the value will get overridden by event payload from test-dep
-                    # value: [1,2,3,4,5]
+                    #value: [1,2,3,4,5]
                     value: |
                       [
                         {"name": "foo", "content_ids": [1,2,3,4,5]},

@@ -173,7 +173,7 @@ rabbitmq-receive:
 
 webhook-loop-infra:
 	kubectl apply -n argo-events -f ./config/webhook-cm.yaml
-	kubectl apply -n argo-events -f ./charts/workflow-loops/main.yaml
+	kubectl apply -n argocd -f ./charts/crds/workflow-loops.yaml
 
 webhook-loop-portforward:
 	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
