@@ -63,9 +63,9 @@ spec:
                       template: whalesay
                       arguments:
                         parameters:
-                        - name: job
+                        - name: name
                           value: "{{item.name}}"
-                        - name: id
+                        - name: content_ids
                           value: "{{item.content_ids}}"
                       withParam: "{{inputs.parameters.payload}}"
                 - name: whalesay
