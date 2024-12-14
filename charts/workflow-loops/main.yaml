@@ -29,6 +29,8 @@ spec:
     - name: test-dep
       eventSourceName: webhook
       eventName: example
+      transform:
+        jq: ".body"
   triggers:
     - template:
         name: webhook-workflow-trigger
@@ -79,7 +81,6 @@ spec:
                 dependencyName: test-dep
                 dataKey: body
               dest: spec.arguments.parameters.0.value
-              transform: jsonpath
             # - src:
             #     dependencyName: test-dep
             #     dataKey: body.name
