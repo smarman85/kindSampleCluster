@@ -30,7 +30,7 @@ spec:
       eventSourceName: webhook
       eventName: example
       transform:
-        jq: ".body"
+        jq: "."
   triggers:
     - template:
         name: webhook-workflow-trigger
