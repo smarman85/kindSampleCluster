@@ -61,7 +61,7 @@ spec:
                       arguments:
                         parameters:
                         - name: job
-                          value: "{{inputs.parameters.name}}"
+                          value: "{{inputs.parameters.payload.name}}"
                         - name: content_id
                           value: "{{item.content_id}}"
                       withParam: "{{inputs.parameters.payload.content_ids}}"
