@@ -61,15 +61,15 @@ spec:
                       arguments:
                         parameters:
                         - name: job
-                          value: "{{item.name}}"
-                        - name: content_ids
-                          value: "{{item.content_ids}}"
-                      withParam: "{{inputs.parameters.payload}}"
+                          value: "{{inputs.parameters.name}}"
+                        - name: content_id
+                          value: "{{item.content_id}}"
+                      withParam: "{{inputs.parameters.payload.content_ids}}"
                 - name: whalesay
                   inputs:
                     parameters:
                     - name: job
-                    - name: content_ids
+                    - name: content_id
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
