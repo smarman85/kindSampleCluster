@@ -73,7 +73,7 @@ spec:
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.content_ids}}"]
+                    args: ["hello world {{inputs.parameters.job}} id: {{inputs.parameters.content_id}}"]
           parameters:
             - src:
                 dependencyName: test-dep
