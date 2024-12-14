@@ -29,8 +29,8 @@ spec:
     - name: test-dep
       eventSourceName: webhook
       eventName: example
-      transform:
-        jq: "."
+      # transform:
+      #   jq: "."
   triggers:
     - template:
         name: webhook-workflow-trigger
@@ -47,26 +47,26 @@ spec:
                 entrypoint: whalesay-loop
                 arguments:
                   parameters:
-                  - name: payload
-                    # the value will get overridden by event payload from test-dep
-                    # value: [1,2,3,4,5]
-                    value: |
-                        {"name": "foo", "content_ids": [1,2,3,4,5]}
+                  - name: name
+                    value: foo
+                  - name: content_ids
+                    value: [1,2,3,4,5]
                 templates:
                 - name: whalesay-loop
                   inputs:
                     parameters:
-                    - name: payload
+                    - name: name
+                    - name: content_ids
                   steps:
                   - - name: process-ids
                       template: whalesay
                       arguments:
                         parameters:
                         - name: job
-                          value: "{{inputs.parameters.payload.name}}"
+                          value: "{{inputs.parameters.name}}"
                         - name: content_id
-                          value: "{{item.content_id}}"
-                      withParam: "{{inputs.parameters.payload.content_ids}}"
+                          value: "{{item}}"
+                      withParam: "{{inputs.parameters.content_ids}}"
                 - name: whalesay
                   inputs:
                     parameters:
@@ -79,16 +79,12 @@ spec:
           parameters:
             - src:
                 dependencyName: test-dep
-                dataKey: body
+                dataKey: body.name
               dest: spec.arguments.parameters.0.value
-            # - src:
-            #     dependencyName: test-dep
-            #     dataKey: body.name
-            #   dest: spec.arguments.parameters.0.value
-            # - src:
-            #     dependencyName: test-dep
-            #     dataKey: body.content_ids
-            #   dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: test-dep
+                dataKey: body.content_ids
+              dest: spec.arguments.parameters.1.value
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: EventBus
