@@ -79,6 +79,7 @@ spec:
                 dependencyName: test-dep
                 dataKey: body
               dest: spec.arguments.parameters.0.value
+              transform: jsonpath
             # - src:
             #     dependencyName: test-dep
             #     dataKey: body.name
