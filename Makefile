@@ -182,3 +182,6 @@ webhook-loop-portforward:
 
 demo-webhook-loop:
 	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
+
+dev-envs:
+	kubectl apply -f charts/crds/devEnv-aoa.yaml
