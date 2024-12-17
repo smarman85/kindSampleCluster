@@ -11,25 +11,16 @@ spec:
   webhook:
     # event-source can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
     preparation:
-      # port to run HTTP server on
       port: "12000"
-      # endpoint to listen to
       endpoint: /invoice-preparation
-      # HTTP request method to allow. In this case, only POST requests are accepted
       method: POST
     processor:
-      # port to run HTTP server on
       port: "13000"
-      # endpoint to listen to
       endpoint: /invoice-processor
-      # HTTP request method to allow. In this case, only POST requests are accepted
       method: POST
     post-processor:
-      # port to run HTTP server on
       port: "14000"
-      # endpoint to listen to
       endpoint: /invoice-post-processor
-      # HTTP request method to allow. In this case, only POST requests are accepted
       method: POST
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -50,7 +41,7 @@ metadata:
   name: test-api-preparation-sensor
 spec:
   template:
-  serviceAccountName: test-api-service-account
+  # serviceAccountName: test-api-service-account
   dependencies:
     - name: preparation-dep
       eventSourceName: test-api-eventsource
@@ -119,158 +110,158 @@ spec:
                 dependencyName: preparation-dep
                 dataKey: body.end_date
               dest: spec.arguments.parameters.2.value
----
-apiVersion: argoproj.io/v1alpha1
-kind: Sensor
-metadata:
-  name: test-api-processor-sensor
-spec:
-  template:
-    #serviceAccountName: operate-workflow-sa
-  dependencies:
-    - name: processor-dep
-      eventSourceName: test-api-eventsource
-      eventName: processor
-      # transform:
-      #   jq: "."
-  triggers:
-    - template:
-        name: processor-workflow-trigger
-        conditions: processor-dep
-        k8s:
-          operation: create
-          source:
-            resource:
-              apiVersion: argoproj.io/v1alpha1
-              kind: Workflow
-              metadata:
-                generateName: test-api-processor-wkf-
-              spec:
-                entrypoint: processor
-                arguments:
-                  parameters:
-                  - name: contract_ids
-                    value: [1,2,3,4,5]
-                  - name: start_date
-                    value: "2024-07-01"
-                  - name: end_date
-                    value: "2024-07-01"
-                  - name: execution_type
-                    value: "restart"
-                templates:
-                - name: processor
-                  inputs:
-                    parameters:
-                    - name: contract_ids
-                    - name: start_date
-                    - name: end_date
-                    - name: execution_type
-                  steps:
-                  - - name: process_ids
-                      template: process
-                      arguments:
-                        parameters:
-                        - name: contract_id
-                          value: "{{item}}"
-                        - name: start_date
-                          value: "{{inputs.parameters.start-date}}"
-                        - name: end_date
-                          value: "{{inputs.parameters.end-date}}"
-                        - name: execution_type
-                          value: "{{inputs.parameters.execution_type}}"
-                      withParam: "{{inputs.parameters.content_ids}}"
-                - name: whalesay
-                  inputs:
-                    parameters:
-                    - name: contract_id
-                    - name: start_date
-                    - name: end_date
-                    - name: execution_type
-                  container:
-                    image: docker/whalesay:latest
-                    command: [cowsay]
-                    args: ["hello world {{inputs.parameters.start-date}} id: {{inputs.parameters.contract_id}} end: {{inputs.parameters.end-date}} type: {{inputs.parameters.execution_type}}"]
-          parameters:
-            - src:
-                dependencyName: processor-dep
-                dataKey: body.contract_ids
-              dest: spec.arguments.parameters.0.value
-            - src:
-                dependencyName: processor-dep
-                dataKey: body.start_date
-              dest: spec.arguments.parameters.1.value
-            - src:
-                dependencyName: processor-dep
-                dataKey: body.end_date
-              dest: spec.arguments.parameters.2.value
-            - src:
-                dependencyName: processor-dep
-                dataKey: body.execution_type
-              dest: spec.arguments.parameters.3.value
----
-apiVersion: argoproj.io/v1alpha1
-kind: Sensor
-metadata:
-  name: test-api-post-processor-sensor
-spec:
-  template:
-    #serviceAccountName: operate-workflow-sa
-  dependencies:
-    - name: post-processor-dep
-      eventSourceName: test-api-eventsource
-      eventName: post-processor
-      # transform:
-      #   jq: "."
-  triggers:
-    - template:
-        name: post-processor-workflow-trigger
-        conditions: post-processor-dep
-        k8s:
-          operation: create
-          source:
-            resource:
-              apiVersion: argoproj.io/v1alpha1
-              kind: Workflow
-              metadata:
-                generateName: test-api-post-processor-wkf-
-              spec:
-                entrypoint: post-processor
-                arguments:
-                  parameters:
-                  - name: start_date
-                    value: "2024-07-01"
-                  - name: end_date
-                    value: "2024-07-01"
-                templates:
-                - name: post-processor
-                  inputs:
-                    parameters:
-                    - name: start_date
-                    - name: end_date
-                  steps:
-                  - - name: process_dates
-                      template: post-processor
-                      arguments:
-                        parameters:
-                        - name: start_date
-                          value: "{{inputs.parameters.start-date}}"
-                        - name: end_date
-                          value: "{{inputs.parameters.end-date}}"
-                - name: post-processor
-                  inputs:
-                    parameters:
-                    - name: start_date
-                    - name: end_date
-                  container:
-                    image: docker/whalesay:latest
-                    command: [cowsay]
-                    args: ["start: {{inputs.parameters.start-date}} end: {{inputs.parameters.end-date}} "]
-          parameters:
-            - src:
-                dependencyName: post-processor-dep
-                dataKey: body.start_date
-              dest: spec.arguments.parameters.0.value
-            - src:
-                dataKey: body.end_date
-                dependencyName: processor-dep
-              dest: spec.arguments.parameters.1.value
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Sensor
+# metadata:
+#   name: test-api-processor-sensor
+# spec:
+#   template:
+#     #serviceAccountName: operate-workflow-sa
+#   dependencies:
+#     - name: processor-dep
+#       eventSourceName: test-api-eventsource
+#       eventName: processor
+#       # transform:
+#       #   jq: "."
+#   triggers:
+#     - template:
+#         name: processor-workflow-trigger
+#         conditions: processor-dep
+#         k8s:
+#           operation: create
+#           source:
+#             resource:
+#               apiVersion: argoproj.io/v1alpha1
+#               kind: Workflow
+#               metadata:
+#                 generateName: test-api-processor-wkf-
+#               spec:
+#                 entrypoint: processor
+#                 arguments:
+#                   parameters:
+#                   - name: contract_ids
+#                     value: [1,2,3,4,5]
+#                   - name: start_date
+#                     value: "2024-07-01"
+#                   - name: end_date
+#                     value: "2024-07-01"
+#                   - name: execution_type
+#                     value: "restart"
+#                 templates:
+#                 - name: processor
+#                   inputs:
+#                     parameters:
+#                     - name: contract_ids
+#                     - name: start_date
+#                     - name: end_date
+#                     - name: execution_type
+#                   steps:
+#                   - - name: process_ids
+#                       template: process
+#                       arguments:
+#                         parameters:
+#                         - name: contract_id
+#                           value: "{{item}}"
+#                         - name: start_date
+#                           value: "{{inputs.parameters.start-date}}"
+#                         - name: end_date
+#                           value: "{{inputs.parameters.end-date}}"
+#                         - name: execution_type
+#                           value: "{{inputs.parameters.execution_type}}"
+#                       withParam: "{{inputs.parameters.content_ids}}"
+#                 - name: whalesay
+#                   inputs:
+#                     parameters:
+#                     - name: contract_id
+#                     - name: start_date
+#                     - name: end_date
+#                     - name: execution_type
+#                   container:
+#                     image: docker/whalesay:latest
+#                     command: [cowsay]
+#                     args: ["hello world {{inputs.parameters.start-date}} id: {{inputs.parameters.contract_id}} end: {{inputs.parameters.end-date}} type: {{inputs.parameters.execution_type}}"]
+#           parameters:
+#             - src:
+#                 dependencyName: processor-dep
+#                 dataKey: body.contract_ids
+#               dest: spec.arguments.parameters.0.value
+#             - src:
+#                 dependencyName: processor-dep
+#                 dataKey: body.start_date
+#               dest: spec.arguments.parameters.1.value
+#             - src:
+#                 dependencyName: processor-dep
+#                 dataKey: body.end_date
+#               dest: spec.arguments.parameters.2.value
+#             - src:
+#                 dependencyName: processor-dep
+#                 dataKey: body.execution_type
+#               dest: spec.arguments.parameters.3.value
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Sensor
+# metadata:
+#   name: test-api-post-processor-sensor
+# spec:
+#   template:
+#     #serviceAccountName: operate-workflow-sa
+#   dependencies:
+#     - name: post-processor-dep
+#       eventSourceName: test-api-eventsource
+#       eventName: post-processor
+#       # transform:
+#       #   jq: "."
+#   triggers:
+#     - template:
+#         name: post-processor-workflow-trigger
+#         conditions: post-processor-dep
+#         k8s:
+#           operation: create
+#           source:
+#             resource:
+#               apiVersion: argoproj.io/v1alpha1
+#               kind: Workflow
+#               metadata:
+#                 generateName: test-api-post-processor-wkf-
+#               spec:
+#                 entrypoint: post-processor
+#                 arguments:
+#                   parameters:
+#                   - name: start_date
+#                     value: "2024-07-01"
+#                   - name: end_date
+#                     value: "2024-07-01"
+#                 templates:
+#                 - name: post-processor
+#                   inputs:
+#                     parameters:
+#                     - name: start_date
+#                     - name: end_date
+#                   steps:
+#                   - - name: process_dates
+#                       template: post-processor
+#                       arguments:
+#                         parameters:
+#                         - name: start_date
+#                           value: "{{inputs.parameters.start-date}}"
+#                         - name: end_date
+#                           value: "{{inputs.parameters.end-date}}"
+#                 - name: post-processor
+#                   inputs:
+#                     parameters:
+#                     - name: start_date
+#                     - name: end_date
+#                   container:
+#                     image: docker/whalesay:latest
+#                     command: [cowsay]
+#                     args: ["start: {{inputs.parameters.start-date}} end: {{inputs.parameters.end-date}} "]
+#           parameters:
+#             - src:
+#                 dependencyName: post-processor-dep
+#                 dataKey: body.start_date
+#               dest: spec.arguments.parameters.0.value
+#             - src:
+#                 dataKey: body.end_date
+#                 dependencyName: processor-dep
+#               dest: spec.arguments.parameters.1.value

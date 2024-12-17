@@ -19,6 +19,18 @@ spec:
       method: POST
 ---
 apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+spec:
+  nats:
+    native:
+      # Optional, defaults to 3. If it is < 3, set it to 3, that is the minimal requirement.
+      replicas: 3
+      # Optional, authen strategy, "none" or "token", defaults to "none"
+      auth: token
+---
+apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
   name: webhook
@@ -85,15 +97,3 @@ spec:
                 dependencyName: test-dep
                 dataKey: body.content_ids
               dest: spec.arguments.parameters.1.value
----
-apiVersion: argoproj.io/v1alpha1
-kind: EventBus
-metadata:
-  name: default
-spec:
-  nats:
-    native:
-      # Optional, defaults to 3. If it is < 3, set it to 3, that is the minimal requirement.
-      replicas: 3
-      # Optional, authen strategy, "none" or "token", defaults to "none"
-      auth: token
