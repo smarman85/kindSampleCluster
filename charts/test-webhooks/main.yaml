@@ -46,6 +46,12 @@ spec:
     - name: preparation-dep
       eventSourceName: test-api-eventsource
       eventName: preparation
+    - name: processor-dep
+      eventSourceName: test-api-eventsource
+      eventName: processor
+    - name: post-processor-dep
+      eventSourceName: test-api-eventsource
+      eventName: post-processor
   triggers:
     - template:
         name: preparation-workflow-trigger
@@ -110,21 +116,6 @@ spec:
                 dependencyName: preparation-dep
                 dataKey: body.end_date
               dest: spec.arguments.parameters.2.value
----
-apiVersion: argoproj.io/v1alpha1
-kind: Sensor
-metadata:
-  name: test-api-processor-sensor
-spec:
-  template:
-    #serviceAccountName: operate-workflow-sa
-  dependencies:
-    - name: processor-dep
-      eventSourceName: test-api-eventsource
-      eventName: processor
-      # transform:
-      #   jq: "."
-  triggers:
     - template:
         name: processor-workflow-trigger
         conditions: processor-dep
@@ -198,21 +189,6 @@ spec:
                 dependencyName: processor-dep
                 dataKey: body.execution_type
               dest: spec.arguments.parameters.3.value
----
-apiVersion: argoproj.io/v1alpha1
-kind: Sensor
-metadata:
-  name: test-api-post-processor-sensor
-spec:
-  template:
-    #serviceAccountName: operate-workflow-sa
-  dependencies:
-    - name: post-processor-dep
-      eventSourceName: test-api-eventsource
-      eventName: post-processor
-      # transform:
-      #   jq: "."
-  triggers:
     - template:
         name: post-processor-workflow-trigger
         conditions: post-processor-dep
