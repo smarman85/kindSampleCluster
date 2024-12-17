@@ -157,7 +157,7 @@ spec:
                     - name: end_date
                     - name: execution_type
                   steps:
-                  - - name: process_ids
+                  - - name: process-ids
                       template: process
                       arguments:
                         parameters:
