@@ -180,7 +180,7 @@ spec:
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["hello world {{inputs.parameters.start-date}} id: {{inputs.parameters.contract_id}} end: {{inputs.parameters.end-date}} type: {{inputs.parameters.execution_type}}"]
+                    args: ["hello world {{inputs.parameters.start_date}} id: {{inputs.parameters.contract_id}} end: {{inputs.parameters.end_date}} type: {{inputs.parameters.execution_type}}"]
           parameters:
             - src:
                 dependencyName: processor-dep
