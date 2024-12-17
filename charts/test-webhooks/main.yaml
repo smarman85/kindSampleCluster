@@ -164,9 +164,9 @@ spec:
                         - name: contract_id
                           value: "{{item}}"
                         - name: start_date
-                          value: "{{inputs.parameters.start-date}}"
+                          value: "{{inputs.parameters.start_date}}"
                         - name: end_date
-                          value: "{{inputs.parameters.end-date}}"
+                          value: "{{inputs.parameters.end_date}}"
                         - name: execution_type
                           value: "{{inputs.parameters.execution_type}}"
                       withParam: "{{inputs.parameters.content_ids}}"
