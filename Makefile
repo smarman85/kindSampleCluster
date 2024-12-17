@@ -3,6 +3,7 @@ DATE := $(shell date +%FT%T%Z)
 # below is the escaped version of the password coming from: htpasswd -bnBC 10 "" admin | tr -d ':\n' | sed 's/$2y/$2a/'
 ADMIN_PASSWORD := $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOgK # admin
 WEBHOOK_POD := $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
+WEBHOOK_MULTI := $(shell kubectl -n argo-events get pod -l eventsource-name=test-api-eventsource -o name)
 CLUSTER_NAME := lab
 
 build-cluster:
@@ -185,10 +186,10 @@ multi-sensor:
 	kubectl apply -n argocd -f ./charts/crds/multi-sensor.yaml
 
 multi-sensor-portforward:
-	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
-	kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
-	#kubectl -n argo-events port-forward $(WEBHOOK_POD) 13000:13000 &
-	#kubectl -n argo-events port-forward $(WEBHOOK_POD) 14000:14000 &
+	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=test-api-eventsource
+	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 12000:12000 &
+	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 13000:13000 &
+	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 14000:14000 &
 
 
 demo-webhook-loop:

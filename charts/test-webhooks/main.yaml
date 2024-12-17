@@ -96,7 +96,7 @@ spec:
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["start_date: {{inputs.parameters.start-date}} contract_ids: {{inputs.parameters.contract_id}} end_date: {{inputs.parameters.end_date}}"]
+                    args: ["start_date: {{inputs.parameters.start_date}} contract_ids: {{inputs.parameters.contract_id}} end_date: {{inputs.parameters.end_date}}"]
           parameters:
             - src:
                 dependencyName: preparation-dep
