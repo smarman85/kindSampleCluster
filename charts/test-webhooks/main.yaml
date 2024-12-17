@@ -169,7 +169,7 @@ spec:
                           value: "{{inputs.parameters.end_date}}"
                         - name: execution_type
                           value: "{{inputs.parameters.execution_type}}"
-                      withParam: "{{inputs.parameters.content_ids}}"
+                      withParam: "{{inputs.parameters.contract_ids}}"
                 - name: process
                   inputs:
                     parameters:
