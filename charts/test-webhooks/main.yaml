@@ -8,7 +8,7 @@ spec:
     ports:
       - port: 12000
         targetPort: 12000
-  test-api-webhook:
+  webhook:
     # event-source can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
     preparation:
       # port to run HTTP server on

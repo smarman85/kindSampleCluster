@@ -180,6 +180,11 @@ webhook-loop-portforward:
 	kubectl wait -n argo-events --for=condition=ready pod -l eventsource-name=webhook
 	kubectl -n argo-events port-forward $(WEBHOOK_POD) 12000:12000 &
 
+multi-sensor:
+	kubectl apply -n argo-events -f ./charts/infra/argo-events/workflow-rbac.yaml
+	kubectl apply -n argocd -f ./charts/crds/multi-sensor.yaml
+
+
 demo-webhook-loop:
 	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
 
