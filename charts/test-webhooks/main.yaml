@@ -240,14 +240,14 @@ spec:
                     - name: end_date
                   steps:
                   - - name: process-dates
-                      template: post-processor
+                      template: post-process
                       arguments:
                         parameters:
                         - name: start_date
                           value: "{{inputs.parameters.start_date}}"
                         - name: end_date
                           value: "{{inputs.parameters.end_date}}"
-                - name: post-processor
+                - name: post-process
                   inputs:
                     parameters:
                     - name: start_date
