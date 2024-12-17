@@ -239,14 +239,14 @@ spec:
                     - name: start_date
                     - name: end_date
                   steps:
-                  - - name: process_dates
+                  - - name: process-dates
                       template: post-processor
                       arguments:
                         parameters:
                         - name: start_date
-                          value: "{{inputs.parameters.start-date}}"
+                          value: "{{inputs.parameters.start_date}}"
                         - name: end_date
-                          value: "{{inputs.parameters.end-date}}"
+                          value: "{{inputs.parameters.end_date}}"
                 - name: post-processor
                   inputs:
                     parameters:
@@ -255,7 +255,7 @@ spec:
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["start: {{inputs.parameters.start-date}} end: {{inputs.parameters.end-date}} "]
+                    args: ["start: {{inputs.parameters.start_date}} end: {{inputs.parameters.end_date}} "]
           parameters:
             - src:
                 dependencyName: post-processor-dep
