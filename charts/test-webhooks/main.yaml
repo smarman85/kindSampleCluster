@@ -69,7 +69,7 @@ spec:
                 arguments:
                   parameters:
                   - name: contract_ids
-                    value: [1,2,3,4,5]
+                    value: "1,2,3,4,5"
                   - name: start_date
                     value: 2024-07-01
                   - name: end_date
@@ -90,19 +90,18 @@ spec:
                           value: "{{inputs.parameters.start_date}}"
                         - name: end_date
                           value: "{{inputs.parameters.end_date}}"
-                        - name: contract_id
-                          value: "{{item}}"
-                      withParam: "{{inputs.parameters.contract_ids}}"
+                        - name: contract_ids
+                          value: "{{inputs.parameters.contract_ids}}"
                 - name: process
                   inputs:
                     parameters:
                     - name: start_date
                     - name: end_date
-                    - name: contract_id
+                    - name: contract_ids
                   container:
                     image: docker/whalesay:latest
                     command: [cowsay]
-                    args: ["start_date: {{inputs.parameters.start_date}} contract_ids: {{inputs.parameters.contract_id}} end_date: {{inputs.parameters.end_date}}"]
+                    args: ["start_date: {{inputs.parameters.start_date}} contract_ids: {{inputs.parameters.contract_ids}} end_date: {{inputs.parameters.end_date}}"]
           parameters:
             - src:
                 dependencyName: preparation-dep
