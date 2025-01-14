@@ -20,9 +20,18 @@ create-namespaces:
 	kubectl create namespace argocd
 	kubectl create namespace argo-events
 
-argocd:
-	kubectl apply -f ./charts/infra/argocd/install.yaml -n argocd
-	# kubectl patch secret argocd-secret -n argocd -p '{"stringData": {"admin.password": "$(ADMIN_PASSWORD)", "admin.passwordMtime": "$(DATE)"}}'
+# argocd:
+# 	kubectl apply -f ./charts/infra/argocd/install.yaml -n argocd
+# 	# kubectl patch secret argocd-secret -n argocd -p '{"stringData": {"admin.password": "$(ADMIN_PASSWORD)", "admin.passwordMtime": "$(DATE)"}}'
+# 
+# argocd-2-6-6:
+# 	kubectl apply -f ./charts/infra/argocd-2-6-6/install.yaml -n argocd
+
+argocd-2-10:
+	kubectl apply -f ./charts/infra/argocd-2.10.17/install.yaml -n argocd
+
+argocd-2-11:
+	kubectl apply -f ./charts/infra/argocd-2.11.9/install.yaml -n argocd
 
 argocd-patch-secret:
 	kubectl patch secret argocd-secret -n argocd -p '{"stringData": {"admin.password": "$(ADMIN_PASSWORD)", "admin.passwordMtime": "$(DATE)"}}'
@@ -30,6 +39,9 @@ argocd-patch-secret:
 argocd-ui:
 	kubectl wait --for=condition=available deployment/argocd-server -n argocd --timeout=30s --timeout=60s
 	open /Applications/Google\ Chrome.app/ "https://0.0.0.0:30080/applications"
+
+argocd-upgrade-2-10: argocd-2-10 argocd-patch-secret
+argocd-upgrade-2-11: argocd-2-11 argocd-patch-secret
 
 argo-workflows:
 	kubectl apply -f ./charts/infra/argo-workflows/install.yaml -n argo
@@ -102,7 +114,10 @@ demo-webhook-run:
 web-pod:
 	kubectl apply -f ./charts/crds/pod.yaml -n argocd
 
-init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
+# init-old: build-cluster create-namespaces argocd-2-6-6 argocd-patch-secret argo-workflows argo-events 
+# init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
+init: build-cluster create-namespaces argocd-2-10 argocd-patch-secret argo-workflows argo-events 
+# init-argocd-2-11: build-cluster create-namespaces argocd-2-11 argocd-patch-secret argo-workflows argo-events 
 init-basic: build-cluster create-namespaces argocd argocd-patch-secret 
 init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
 
@@ -121,7 +136,7 @@ keda-install:
 	kubectl apply -f charts/crds/keda.yaml -n argocd
 	# kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.15.1/keda-2.15.1-core.yaml
 
-localstack:
+localstack-apply:
 	kubectl apply -f charts/crds/localstack.yaml
 
 localstack-portforward:
