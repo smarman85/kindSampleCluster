@@ -1,25 +1,25 @@
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: EventBus
-# metadata:
-#   # https://argoproj.github.io/argo-events/eventbus/eventbus/
-#   name: default # use default as a common practice
-# spec:
-#   nats:
-#     native:
-#       replicas: 2
-#       auth: none
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: EventSource
-# metadata:
-#   name: webhook-deps-es
-# spec:
-#   webhook:
-#     ci:
-#       port: "12000"
-#       endpoint: /ci
-#       method: POST
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  # https://argoproj.github.io/argo-events/eventbus/eventbus/
+  name: default # use default as a common practice
+spec:
+  nats:
+    native:
+      replicas: 2
+      auth: none
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: webhook-deps-es
+spec:
+  webhook:
+    ci:
+      port: "12000"
+      endpoint: /ci
+      method: POST
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
