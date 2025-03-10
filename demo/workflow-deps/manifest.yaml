@@ -1,0 +1,138 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  # https://argoproj.github.io/argo-events/eventbus/eventbus/
+  name: default # use default as a common practice
+spec:
+  nats:
+    native:
+      replicas: 2
+      auth: none
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: webhook-deps-es
+spec:
+  webhook:
+    ci:
+      port: "12000"
+      endpoint: /ci
+      method: POST
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: webhook-deps-sensor
+spec:
+  template:
+    # serviceAccountName: blah
+  dependencies:
+    - name: ci-deps
+      eventSourceName: webhook-deps-es
+      eventName: ci
+  triggers:
+    - template:
+      name: ci-trigger
+      k8s:
+        operation: create
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: ci-workflow-
+            spec:
+              arguments:
+                parameters:
+                - name: repo
+                  value: test-repo-name
+                - name: sha
+                  value: test-repo-sha
+                - name: fileName
+                  value: test.yaml
+              entrypoint: ci
+              volumeClaimTemplates:
+              - metadata:
+                  name: workdir
+                spec:
+                  accessMode: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 1Gi
+              templates:
+              - name: ci
+                inputs:
+                  parameters:
+                  - name: repo
+                    value: {{"inputs.parameters.repo"}}
+                  - name: sha
+                    value: {{"inputs.parameters.sha"}}
+                  - name: fileName
+                    value: {{"inputs.parameters.fileName"}}
+                steps:
+                - - name: build
+                    template: build-golang-example
+                    arguments:
+                      parameters:
+                      - name: repo
+                        value: "{{inputs.parameters.repo}}"
+                      - name: sha
+                        value: "{{inputs.parameters.sha}}"
+                - - name: test
+                    template: run-hello
+                    arguments:
+                      parameters:
+                        - name: fileName
+                          value: "{{ inputs.parameters.fileName}}"
+              - name: build-golang-example
+                inputs:
+                  parameters:
+                  - name: sha
+                  - name: repo
+                  artifacts:
+                  - name: code
+                    path: /go/src/github.com/golang/example
+                    git:
+                      repo: "{{inputs.parameters.repo}}"
+                      revision: "{{inputs.parameters.sha}}"
+                container:
+                  image: golang:1.8
+                  command: [sh, -c]
+                  args: ["
+                    cd /go/src/github.com/golang/example/hello &&
+                    git status &&
+                    go build -v .
+                  "]
+                  volumeMounts:
+                  - name: workdir
+                    mountPath: /go
+              - name: run-hello
+                inputs:
+                  parameters:
+                  - name: "{{inputs.parameters.fileName}}"
+                container:
+                  image: golang:1.8
+                  command: [sh, -c]
+                  args: ["
+                    uname -a ;
+                    cat /etc/os-release ;
+                    {{inputs.parameters.fileName}}
+                  "]
+                  volumeMounts:
+                  - name: workdir
+                    mountPath: /go
+        parameters:
+          - src:
+              dependencyName: ci-deps
+              dataKey: body.repo
+            dest: spec.arguments.parameters.0.value
+          - src:
+              dependencyName: ci-deps
+              dataKey: body.sha
+            dest: spec.arguments.parameters.1.value
+          - src:
+              dependencyName: fileName
+              dataKey: body.filename
+            dest: spec.arguments.parameters.2.value

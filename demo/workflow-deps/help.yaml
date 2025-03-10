@@ -1,0 +1,347 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-20"
+  name: swissarmyknife-sa
+  namespace: swissarmyknife
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: swissarmyknife-role
+  namespace: swissarmyknife
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - '*'
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  - workflowtemplates
+  - cronworkflows
+  - clusterworkflowtemplates
+  - workflowtaskresult
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: swissarmyknife-rb
+  namespace: swissarmyknife
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: swissarmyknife-role
+subjects:
+- kind: ServiceAccount
+  name: swissarmyknife-account
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: swissarmyknife-kustomize
+    app.kubernetes.io/name: swissarmyknife
+    backstage.io/kubernetes-id: swissarmyknife
+  name: swissarmyknife-kustomize
+  namespace: swissarmyknife
+spec:
+  ports:
+  - port: 80
+    targetPort: 13000
+  selector:
+    controller: eventsource-controller
+    eventsource-name: swissarmyknife-es
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: swissarmyknife
+    app.kubernetes.io/name: swissarmyknife
+    backstage.io/kubernetes-id: swissarmyknife
+  name: swissarmyknife-svc
+  namespace: swissarmyknife
+spec:
+  ports:
+  - port: 80
+    targetPort: 12000
+  selector:
+    controller: eventsource-controller
+    eventsource-name: swissarmyknife-es
+  type: ClusterIP
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+  namespace: swissarmyknife
+spec:
+  nats:
+    native:
+      auth: token
+      replicas: 3
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: swissarmyknife-es
+  namespace: swissarmyknife
+spec:
+  webhook:
+    kustomize:
+      endpoint: /kustomize
+      method: POST
+      port: "13000"
+    tf:
+      endpoint: /tf
+      method: POST
+      port: "12000"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: swissarmyknife
+  namespace: swissarmyknife
+spec:
+  dependencies:
+  - eventName: tf
+    eventSourceName: swissarmyknife-es
+    name: swiss-bundle
+  - eventName: kustomize
+    eventSourceName: swissarmyknife-es
+    name: swiss-bundle-kustomize
+  template:
+    automountServiceAccountToken: true
+    serviceAccountName: swissarmyknife-account
+  triggers:
+  - template:
+      k8s:
+        operation: create
+        parameters:
+        - dest: spec.arguments.parameters.0.value
+          src:
+            dataKey: body.repository.owner.display_name
+            dependencyName: swiss-bundle
+        - dest: spec.arguments.parameters.1.value
+          src:
+            dataKey: body.repository.name
+            dependencyName: swiss-bundle
+        - dest: spec.arguments.parameters.2.value
+          src:
+            dataKey: body.pullrequest.source.commit.hash
+            dependencyName: swiss-bundle
+        - dest: spec.arguments.parameters.3.value
+          src:
+            dataKey: body.pullrequest.id
+            dependencyName: swiss-bundle
+        - dest: spec.arguments.parameters.4.value
+          src:
+            dataKey: body.repository.links.self.href
+            dependencyName: swiss-bundle
+        - dest: spec.arguments.parameters.5.value
+          src:
+            dataKey: body.pullrequest.destination.commit.hash
+            dependencyName: swiss-bundle
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: swissarmyknife-
+            spec:
+              arguments:
+                parameters:
+                - name: repoOwner
+                  value: default
+                - name: repo
+                  value: default
+                - name: sha
+                  value: default
+                - name: prNumber
+                  value: default
+                - name: caller
+                  value: default
+                - name: destSha
+                  value: default
+              automountServiceAccountToken: true
+              entrypoint: terraform
+              serviceAccountName: swissarmyknife-account
+              templates:
+              - container:
+                  args:
+                  - bitbucket.org
+                  - '{{inputs.parameters.repoOwner}}'
+                  - '{{inputs.parameters.repo}}'
+                  - '{{inputs.parameters.sha}}'
+                  - '{{inputs.parameters.prNumber}}'
+                  - '{{inputs.parameters.caller}}'
+                  - '{{inputs.parameters.destSha}}'
+                  - '{{workflow.name}}'
+                  command:
+                  - /app/tf-apply.sh
+                  env:
+                  - name: YOPASS_URL_INT
+                    value: http://yopass-service.yopass.svc
+                  - name: YOPASS_URL_EXT
+                    value: https://yopass.us.niumops.com
+                  - name: CONFIG_SECRETS
+                    value: us/swissarmyknife/config_secrets
+                  image: localhost:latest
+                  volumeMounts: null
+                inputs:
+                  parameters:
+                  - name: repoOwner
+                    value: default
+                  - name: repo
+                    value: default
+                  - name: sha
+                    value: default
+                  - name: prNumber
+                    value: default
+                  - name: caller
+                    value: default
+                  - name: destSha
+                    value: default
+                name: terraform
+                volumes: null
+              ttlStrategy:
+                secondsAfterCompletion: 86400
+                secondsAfterFailure: 345600
+                secondsAfterSuccess: 86400
+      name: armyknife-trigger
+  - template:
+      k8s:
+        operation: create
+        parameters:
+        - dest: spec.arguments.parameters.0.value
+          src:
+            dataKey: body.repository.owner.display_name
+            dependencyName: swiss-bundle-kustomize
+        - dest: spec.arguments.parameters.1.value
+          src:
+            dataKey: body.repository.name
+            dependencyName: swiss-bundle-kustomize
+        - dest: spec.arguments.parameters.2.value
+          src:
+            dataKey: body.pullrequest.source.commit.hash
+            dependencyName: swiss-bundle-kustomize
+        - dest: spec.arguments.parameters.3.value
+          src:
+            dataKey: body.pullrequest.id
+            dependencyName: swiss-bundle-kustomize
+        - dest: spec.arguments.parameters.4.value
+          src:
+            dataKey: body.repository.links.self.href
+            dependencyName: swiss-bundle-kustomize
+        - dest: spec.arguments.parameters.5.value
+          src:
+            dataKey: body.pullrequest.destination.commit.hash
+            dependencyName: swiss-bundle-kustomize
+        source:
+          resource:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Workflow
+            metadata:
+              generateName: swissarmyknife-km
+            spec:
+              arguments:
+                parameters:
+                - name: repoOwner
+                  value: default
+                - name: repo
+                  value: default
+                - name: sha
+                  value: default
+                - name: prNumber
+                  value: default
+                - name: caller
+                  value: default
+                - name: destSha
+                  value: default
+              automountServiceAccountToken: true
+              entrypoint: kustomize
+              serviceAccountName: swissarmyknife-account
+              templates:
+              - container:
+                  args:
+                  - bitbucket.org
+                  - '{{inputs.parameters.repoOwner}}'
+                  - '{{inputs.parameters.repo}}'
+                  - '{{inputs.parameters.sha}}'
+                  - '{{inputs.parameters.prNumber}}'
+                  - '{{inputs.parameters.caller}}'
+                  - '{{inputs.parameters.destSha}}'
+                  - '{{workflow.name}}'
+                  command:
+                  - /app/kustomize.sh
+                  env:
+                  - name: YOPASS_URL_INT
+                    value: http://yopass-service.yopass.svc
+                  - name: YOPASS_URL_EXT
+                    value: https://yopass.us.niumops.com
+                  - name: CONFIG_SECRETS
+                    value: us/swissarmyknife/config_secrets
+                  image: localhost:latest
+                  volumeMounts: null
+                inputs:
+                  parameters:
+                  - name: repoOwner
+                    value: default
+                  - name: repo
+                    value: default
+                  - name: sha
+                    value: default
+                  - name: prNumber
+                    value: default
+                  - name: caller
+                    value: default
+                  - name: destSha
+                    value: default
+                name: kustomize
+                volumes: null
+              ttlStrategy:
+                secondsAfterCompletion: 86400
+                secondsAfterFailure: 345600
+                secondsAfterSuccess: 86400
+      name: armyknife-trigger-kustomize
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: swissarmyknife
+    app.kubernetes.io/name: swissarmyknife
+    backstage.io/kubernetes-id: swissarmyknife
+    event: swissarmyknife-es
+  name: swissarmyknife-ing
+  namespace: swissarmyknife
+spec:
+  rules:
+  - host: swissarmyknife.us.niumops.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: swissarmyknife-svc
+            port:
+              number: 80
+        path: /tf
+        pathType: Exact
+  - host: swissarmyknife.us.niumops.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: swissarmyknife-kustomize
+            port:
+              number: 80
+        path: /kustomize
+        pathType: Exact
