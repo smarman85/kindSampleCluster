@@ -4,6 +4,7 @@ DATE := $(shell date +%FT%T%Z)
 ADMIN_PASSWORD := $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOgK # admin
 WEBHOOK_POD := $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
 WEBHOOK_MULTI := $(shell kubectl -n argo-events get pod -l eventsource-name=test-api-eventsource -o name)
+CI_POD := $(shell kubectl -n ci get pod -l eventsource-name=webhook-deps-es -o name)
 CLUSTER_NAME := lab
 
 build-cluster:
@@ -96,6 +97,14 @@ webhook-demo:
 
 webhook-pod:
 	kubectl apply -n argo-events -f ./demo/webhook-tf/pod.yaml
+
+ci:
+	kubectl apply -n argocd -f ./config/ci.yaml
+	kubectl wait -n ci --for=condition=ready pod -l eventsource-name=webhook-deps-es
+	kubectl -n argocd port-forward $(CI_POD) 12000:12000 &
+
+test-ci:
+	curl -d '{"repo": "https://github.com/golang/example.git", "sha": "40afcb705d05179afce97d51b6677e46b5b48bf5", "filename": "/go/src/github.com/golang/example"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
 
 demo-dag:
 	kubectl apply -n argo -f ./demo/dag/install.yaml
