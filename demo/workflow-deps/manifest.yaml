@@ -93,7 +93,7 @@ spec:
                 - metadata:
                     name: workdir
                   spec:
-                    accessMode: ["ReadWriteOnce"]
+                    accessModes: ["ReadWriteOnce"]
                     resources:
                       requests:
                         storage: 1Gi
