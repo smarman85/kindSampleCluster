@@ -9,7 +9,7 @@ metadata:
     meta.helm.sh/release-namespace: argocd
 spec:
   destination:
-    namespace: argo-events
+    namespace: ci
     server: https://kubernetes.default.svc
   project: default
   source:
