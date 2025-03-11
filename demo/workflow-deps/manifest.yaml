@@ -143,7 +143,9 @@ spec:
                       cd src/golang ;
                       git clone {{inputs.parameters.repo}} ;
                       cd example/hello ;
+                      go get golang.org/x/example/hello/reverse ;
                       ls -al ;
+                      go install ;
                     "]
                     volumeMounts:
                     - name: workdir
