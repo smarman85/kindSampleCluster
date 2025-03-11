@@ -140,8 +140,7 @@ spec:
                     command: [sh, -c]
                     args: ["
                       pwd ;
-                      ls -al ;
-                      ls src/* ;
+                      ls src/golang/* ;
                     "]
                     volumeMounts:
                     - name: workdir
