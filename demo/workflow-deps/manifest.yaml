@@ -141,7 +141,7 @@ spec:
                     args: ["
                       pwd ;
                       cd src/golang ;
-                      git clone {{inpouts.parameters.repo}} ;
+                      git clone {{inputs.parameters.repo}} ;
                       cd example/hello ;
                       ls -al ;
                     "]
