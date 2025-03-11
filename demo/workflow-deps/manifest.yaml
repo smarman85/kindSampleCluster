@@ -27,7 +27,7 @@ metadata:
   name: webhook-deps-sensor
 spec:
   template:
-    # serviceAccountName: blah
+    serviceAccountName: argo-events-sa
   dependencies:
     - name: ci-deps
       eventSourceName: webhook-deps-es
@@ -85,7 +85,7 @@ spec:
                       arguments:
                         parameters:
                           - name: fileName
-                            value: "{{ inputs.parameters.fileName}}"
+                            value: "{{inputs.parameters.fileName}}"
                 - name: build-golang-example
                   inputs:
                     parameters:
