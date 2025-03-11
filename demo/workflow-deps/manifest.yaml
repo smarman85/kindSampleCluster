@@ -138,7 +138,6 @@ spec:
                     command: [sh, -c]
                     args: ["
                       cd /go/src/github.com/golang ;
-                      git clone https://github.com/golang/example.git ;
                       cd example/hello ;
                       go get golang.org/x/example/hello/reverse ; 
                       go install .
