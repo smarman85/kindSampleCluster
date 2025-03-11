@@ -140,7 +140,10 @@ spec:
                     command: [sh, -c]
                     args: ["
                       pwd ;
-                      ls src/golang/* ;
+                      cd src/golang ;
+                      git clone {{inpouts.parameters.repo}} ;
+                      cd example/hello ;
+                      ls -al ;
                     "]
                     volumeMounts:
                     - name: workdir
