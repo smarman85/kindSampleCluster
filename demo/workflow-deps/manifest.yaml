@@ -141,6 +141,7 @@ spec:
                     args: ["
                       pwd ;
                       ls -al ;
+                      ls src/* ;
                     "]
                     volumeMounts:
                     - name: workdir
