@@ -137,8 +137,11 @@ spec:
                     image: golang:1.8
                     command: [sh, -c]
                     args: ["
+                      mkdir -p /go/src/github.com/golang ; 
                       git clone https://github.com/golang/example.git ;
-                      go install example/hello
+                      cd example/hello ;
+                      go get golang.org/x/example/hello/reverse ; 
+                      go install .
                     "]
                     volumeMounts:
                     - name: workdir
