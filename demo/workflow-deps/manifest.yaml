@@ -137,7 +137,7 @@ spec:
                     image: golang:1.8
                     command: [sh, -c]
                     args: ["
-                      git clone https://github.com/golang/example.git
+                      git clone https://github.com/golang/example.git ;
                       go install example/hello
                     "]
                     volumeMounts:
