@@ -99,9 +99,9 @@ webhook-pod:
 	kubectl apply -n argo-events -f ./demo/webhook-tf/pod.yaml
 
 ci:
-	kubectl apply -n argocd -f ./config/ci.yaml
+	kubectl apply -n argocd -f ./charts/crds/ci.yaml
 	kubectl wait -n ci --for=condition=ready pod -l eventsource-name=webhook-deps-es
-	kubectl -n argocd port-forward $(CI_POD) 12000:12000 &
+	kubectl -n ci port-forward $(CI_POD) 12000:12000 &
 
 test-ci:
 	curl -d '{"repo": "https://github.com/golang/example.git", "sha": "40afcb705d05179afce97d51b6677e46b5b48bf5", "filename": "/go/src/github.com/golang/example"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
