@@ -26,8 +26,8 @@ kind: Sensor
 metadata:
   name: webhook-deps-sensor
 spec:
-  template:
-    serviceAccountName: argo-events-sa
+  template: {}
+    # serviceAccountName: argo-events-sa
   dependencies:
     - name: ci-deps
       eventSourceName: webhook-deps-es
