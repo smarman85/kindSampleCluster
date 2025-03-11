@@ -81,6 +81,8 @@ spec:
                 generateName: ci-workflow-
               spec:
                 arguments:
+                  serviceAccountName: ci-events-sa
+                  automountServiceAccountToken: true
                   parameters:
                   - name: repo
                     value: test-repo-name
