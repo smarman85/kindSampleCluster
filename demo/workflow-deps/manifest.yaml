@@ -140,12 +140,8 @@ spec:
                     command: [sh, -c]
                     args: ["
                       pwd ;
-                      cd src/golang ;
-                      git clone {{inputs.parameters.repo}} ;
-                      cd example/hello ;
-                      go get golang.org/x/example/hello/reverse ;
+                      cd /go/src/github.com/golang/example ;
                       ls -al ;
-                      go install ;
                     "]
                     volumeMounts:
                     - name: workdir
