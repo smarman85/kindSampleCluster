@@ -139,9 +139,9 @@ spec:
                     image: golang:1.8
                     command: [sh, -c]
                     args: ["
-                      pwd ;
-                      cd /go/src/github.com/golang/example ;
-                      ls -al ;
+                      cd /go/src/github.com/golang/example/hello ;
+                      git status &&
+                      go build -v .
                     "]
                     volumeMounts:
                     - name: workdir
