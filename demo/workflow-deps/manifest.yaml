@@ -138,6 +138,7 @@ spec:
                     command: [sh, -c]
                     args: ["
                       mkdir -p /go/src/github.com/golang ; 
+                      cd /go/src/github.com/golang ;
                       git clone https://github.com/golang/example.git ;
                       cd example/hello ;
                       go get golang.org/x/example/hello/reverse ; 
