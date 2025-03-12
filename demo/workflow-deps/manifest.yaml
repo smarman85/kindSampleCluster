@@ -30,6 +30,15 @@ metadata:
   name: executor
 rules:
 - apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - list
+  - patch
+- apiGroups:
   - argoproj.io
   resources:
   - workflowtaskresults
@@ -139,15 +148,15 @@ spec:
                     image: golang:1.8
                     command: [sh, -c]
                     args: ["
-                      cd /go/src/github.com/golang/example/hello ;
-                      git status ;
-                      go get golang.org/x/example/hello/reverse ;
-                      go install ;
-                      exit 0
+                      cd /go/src/github.com/golang/example/hello &&
+                      git status &&
+                      go get golang.org/x/example/hello/reverse &&
+                      go install
                     "]
                     volumeMounts:
                     - name: workdir
                       mountPath: /go
+
                 - name: run-hello
                   inputs:
                     parameters:
