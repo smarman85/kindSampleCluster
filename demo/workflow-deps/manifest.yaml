@@ -59,6 +59,18 @@ subjects:
 - kind: ServiceAccount
   name: ci-events-sa
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: executor
+subjects:
+- kind: ServiceAccount
+  name: default
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
