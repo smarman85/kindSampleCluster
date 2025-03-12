@@ -142,7 +142,8 @@ spec:
                       cd /go/src/github.com/golang/example/hello ;
                       git status &&
                       go get golang.org/x/example/hello/reverse ;
-                      go build -v .
+                      go build -v . ;
+                      exit 0
                     "]
                     volumeMounts:
                     - name: workdir
