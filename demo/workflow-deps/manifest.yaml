@@ -151,10 +151,14 @@ spec:
                     - name: sha
                     - name: repo
                     artifacts:
+                    # https://argo-workflows.readthedocs.io/en/latest/walk-through/hardwired-artifacts/
+                    # 
                     - name: code
+                      # path to put the git repo or file on the pod
                       path: /go/src/github.com/golang/example
                       git:
                         repo: "{{inputs.parameters.repo}}"
+                        # revision can be anything github expects (branch, commit, tag...)
                         revision: "{{inputs.parameters.sha}}"
                   container:
                     image: golang:1.8
