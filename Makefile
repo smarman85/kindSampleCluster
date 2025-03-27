@@ -5,6 +5,7 @@ ADMIN_PASSWORD := $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOg
 WEBHOOK_POD := $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
 WEBHOOK_MULTI := $(shell kubectl -n argo-events get pod -l eventsource-name=test-api-eventsource -o name)
 CI_POD := $(shell kubectl -n ci get pod -l eventsource-name=webhook-deps-es -o name)
+CI_POD_CACHE := $(shell kubectl -n ci get pod -l eventsource-name=workflow-cache-es -o name)
 CLUSTER_NAME := lab
 
 build-cluster:
@@ -102,6 +103,11 @@ ci:
 	kubectl apply -n argocd -f ./charts/crds/ci.yaml
 	kubectl wait -n ci --for=condition=ready pod -l eventsource-name=webhook-deps-es
 	kubectl -n ci port-forward $(CI_POD) 12000:12000 &
+
+ci-cache:
+	kubectl apply -n argocd -f ./charts/crds/ci-cache.yaml
+	kubectl wait -n ci-cache --for=condition=ready pod -l eventsource-name=workflow-cache-es
+	kubectl -n ci-cache port-forward $(CI_POD_CACHE) 12000:12000 &
 
 test-ci:
 	curl -d '{"repo": "https://github.com/golang/example.git", "sha": "cfe12d6", "filename": "/go/bin/hello"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci

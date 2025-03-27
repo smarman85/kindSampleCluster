@@ -1,0 +1,276 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: workflow-cache-pv
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  storageClassName: standard
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /tmp/demo-pv
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: workflow-cache-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+  volumeName: workflow-cache-pv
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  # https://argoproj.github.io/argo-events/eventbus/eventbus/
+  name: default # use default as a common practice
+spec:
+  nats:
+    native:
+      replicas: 2
+      auth: none
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: workflow-cache-es
+spec:
+  webhook:
+    ci:
+      port: "12000"
+      endpoint: /ci
+      method: POST
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    workflows.argoproj.io/description: |
+      Recomended minimum permissions for the `emissary` executor.
+  name: executor
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - watch
+  - list
+  - patch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflowtaskresults
+  - workflows
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: executor-default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: executor
+subjects:
+- kind: ServiceAccount
+  name: workflow-cache-sa
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    kubernetes.io/enforce-mountable-secrets: "true"
+  name: workflow-cache-sa
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: workflow-cache-sensor
+spec:
+  template:
+    serviceAccountName: workflow-cache-sa
+  dependencies:
+    - name: ci-deps
+      eventSourceName: workflow-cache-es
+      eventName: ci
+  triggers:
+    - template:
+        name: ci-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: ci-workflow-
+              spec:
+                serviceAccountName: workflow-cache-sa
+                automountServiceAccountToken: true
+                arguments:
+                  parameters:
+                  - name: repo
+                    value: test-repo-name
+                  - name: sha
+                    value: test-repo-sha
+                  - name: fileName
+                    value: test.yaml
+                entrypoint: ci
+                volumeClaimTemplates:
+                - metadata:
+                    name: workflow-cache-pvc
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
+                - metadata:
+                    name: workdir
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
+                templates:
+                - name: ci
+                  inputs:
+                    parameters:
+                    - name: repo
+                      value: "{{inputs.parameters.repo}}"
+                    - name: sha
+                      value: "{{inputs.parameters.sha}}"
+                    - name: fileName
+                      value: "{{inputs.parameters.fileName}}"
+                  steps:
+                  - - name: check-cache
+                      template: sha-check
+                      arguments:
+                        parameters:
+                          - name: repo
+                            value: "{{inputs.parameters.repo}}"
+                          - name: sha
+                            value: "{{inputs.parameters.sha}}"
+                          - name: fileName
+                            value: "{{inputs.parameters.fileName}}"
+                  - - name: use-cache
+                      template: build-with-cache
+                      when: "{{steps.check-cache.outputs.result}} == cached"
+                  - - name: fetch-dependencies
+                      template: download-and-cache
+                      when: "{{steps.check-cache.outputs.result}} == not_cached"
+                  - - name: test
+                      template: run-hello
+                      arguments:
+                        parameters:
+                          - name: fileName
+                            value: "{{inputs.parameters.fileName}}"
+                  - - name: cleanup
+                      template: cache-cleanup
+                - name: check-cache
+                  inputs:
+                    parameters:
+                    - name: sha
+                    - name: repo
+                    artifacts:
+                    - name: code
+                      path: /go/src/github.com/golang/example
+                      git:
+                        repo: "{{inputs.parameters.repo}}"
+                        revision: "{{inputs.parameters.sha}}"
+                  container:
+                    image: golang:1.8
+                    command: [sh, -c]
+                    args: 
+                     - |
+                        SHA=$(sha256sum go.sum | awk '{print $1}')
+                        if [ -f /mnt/cache/$SHA ]; then
+                          echo "cached" > /tmp/output
+                        else
+                          echo "not_cached" > /tmp/output
+                        fi
+                    volumeMounts:
+                    - name: workdir
+                      mountPath: /go
+                    - name: workflow-cache-pv
+                      mountPath: /mnt/cache
+                  outputs:
+                    result: { valueFrom: { path: "/tmp/output"}}
+                - name: build-with-cache
+                  container:
+                    image: golang:1.20
+                    command: [sh, -c]
+                    args:
+                      - |
+                        echo "Using cached dependencies..."
+                        go build -o app .
+                    volumeMounts:
+                      - name: workdir
+                        mountPath: /go
+                      - name: workflow-cache-pvc
+                        mountPath: /go/pkg/mod
+                - name: download-and-cache
+                  container:
+                    image: golang:1.20
+                    command: [sh, -c]
+                    args:
+                      - |
+                        echo "No cache found. Fetching dependencies..."
+                        go mod tidy
+                        go build -o app .
+                        SHA=$(sha256sum go.sum | awk '{print $1}')
+                        cp -r /go/pkg/mod /mnt/cache/$SHA
+                    volumeMounts:
+                      - name: workdir
+                        mountPath: /go
+                      - name: workflow-cache-pvc
+                        mountPath: /mnt/cache
+                - name: cache-cleanup
+                  container:
+                    image: golang:1.20
+                    command: [sh, -c]
+                    args:
+                      - |
+                        echo "Cleaning up cache older than 7 days..."
+                        find /mnt/cache -type d -mtime +7 -exec rm -rf {} +
+                    volumeMounts:
+                      - name: workflow-cache-pvc
+                        mountPath: /mnt/cache
+                - name: run-hello
+                  inputs:
+                    parameters:
+                    - name: fileName
+                  container:
+                    image: golang:1.8
+                    command: [sh, -c]
+                    args: 
+                      - |
+                        uname -a ;
+                        cat /etc/os-release ;
+                        {{inputs.parameters.fileName}}
+                    volumeMounts:
+                    - name: workdir
+                      mountPath: /go
+          parameters:
+            - src:
+                dependencyName: ci-deps
+                dataKey: body.repo
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: ci-deps
+                dataKey: body.sha
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: ci-deps
+                dataKey: body.filename
+              dest: spec.arguments.parameters.2.value
