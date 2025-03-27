@@ -224,11 +224,10 @@ spec:
                     args:
                       - |
                         echo "No cache found. Fetching dependencies..."
-                        cd /go/src/github.com/golang/example
-                        go mod tidy
+                        cd /go/src/github.com/golang/example/hello
+                        git status
                         go get golang.org/x/example/hello/reverse
-                        cd hello
-                        go build -o app .
+                        go install
                         cd ../
                         SHA=$(sha256sum go.sum | awk '{print $1}')
                         cp -r /go/pkg/mod /mnt/cache/$SHA
