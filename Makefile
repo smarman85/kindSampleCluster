@@ -110,8 +110,8 @@ ci-cache:
 	kubectl -n ci-cache port-forward $(CI_POD_CACHE) 12000:12000 &
 
 test-ci:
-	curl -d '{"repo": "https://github.com/golang/example.git", "sha": "cfe12d6", "filename": "/go/bin/hello"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
-	#curl -d '{"repo": "https://github.com/golang/example.git", "sha": "40afcb705d05179afce97d51b6677e46b5b48bf5", "filename": "/go/bin/hello"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
+	#curl -d '{"repo": "https://github.com/golang/example.git", "sha": "cfe12d6", "filename": "/go/bin/hello"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
+	curl -d '{"repo": "https://github.com/golang/example.git", "sha": "40afcb705d05179afce97d51b6677e46b5b48bf5", "filename": "/go/bin/hello"}' -H "Content-Type: application/json" -X POST http://localhost:12000/ci
 
 demo-dag:
 	kubectl apply -n argo -f ./demo/dag/install.yaml

@@ -193,7 +193,6 @@ spec:
                     command: [sh, -c]
                     args: 
                      - |
-                        ls /go/src/github.com/golang/
                         SHA=$(sha256sum /go/src/github.com/golang/example/go.sum | awk '{print $1}')
                         if [ -f /mnt/cache/$SHA ]; then
                           echo "cached"
