@@ -202,7 +202,7 @@ spec:
                     volumeMounts:
                     - name: workdir
                       mountPath: /go
-                    - name: workflow-cache-pv
+                    - name: workflow-cache-pvc
                       mountPath: /mnt/cache
                 - name: build-with-cache
                   container:
