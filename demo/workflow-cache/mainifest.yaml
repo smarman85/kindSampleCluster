@@ -177,7 +177,7 @@ spec:
                             value: "{{inputs.parameters.fileName}}"
                   - - name: cleanup
                       template: cache-cleanup
-                - name: check-cache
+                - name: sha-check
                   inputs:
                     parameters:
                     - name: sha
