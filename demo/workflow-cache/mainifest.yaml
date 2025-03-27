@@ -121,11 +121,11 @@ spec:
                 arguments:
                   parameters:
                   - name: repo
-                    value: test-repo-name
+                    value: "test-repo-name"
                   - name: sha
-                    value: test-repo-sha
+                    value: "test-repo-sha"
                   - name: fileName
-                    value: test.yaml
+                    value: "test.yaml"
                 entrypoint: ci
                 volumeClaimTemplates:
                 - metadata:
@@ -195,17 +195,15 @@ spec:
                      - |
                         SHA=$(sha256sum go.sum | awk '{print $1}')
                         if [ -f /mnt/cache/$SHA ]; then
-                          echo "cached" > /tmp/output
+                          echo "cached"
                         else
-                          echo "not_cached" > /tmp/output
+                          echo "not_cached"
                         fi
                     volumeMounts:
                     - name: workdir
                       mountPath: /go
                     - name: workflow-cache-pv
                       mountPath: /mnt/cache
-                  outputs:
-                    result: { valueFrom: { path: "/tmp/output"}}
                 - name: build-with-cache
                   container:
                     image: golang:1.20
