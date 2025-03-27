@@ -128,13 +128,13 @@ spec:
                     value: "test.yaml"
                 entrypoint: ci
                 volumeClaimTemplates:
-                - metadata:
-                    name: workflow-cache-pvc
-                  spec:
-                    accessModes: ["ReadWriteOnce"]
-                    resources:
-                      requests:
-                        storage: 1Gi
+                # - metadata:
+                #     name: workflow-cache-pvc
+                #   spec:
+                #     accessModes: ["ReadWriteOnce"]
+                #     resources:
+                #       requests:
+                #         storage: 1Gi
                 - metadata:
                     name: workdir
                   spec:
@@ -201,7 +201,7 @@ spec:
                         fi
                     volumeMounts:
                     - name: workdir
-                      mountPath: /go
+                      mountPath: /go/src/github.com/golang
                     - name: workflow-cache-pvc
                       mountPath: /mnt/cache
                 - name: build-with-cache
@@ -211,12 +211,13 @@ spec:
                     args:
                       - |
                         echo "Using cached dependencies..."
+                        cp -R /mnt/cache/$SHA /go/pkg/mod
                         go build -o app .
                     volumeMounts:
                       - name: workdir
                         mountPath: /go
                       - name: workflow-cache-pvc
-                        mountPath: /go/pkg/mod
+                        mountPath: /mnt/cache
                 - name: download-and-cache
                   container:
                     image: golang:1.20
@@ -234,7 +235,7 @@ spec:
                         cp -r /go/pkg/mod /mnt/cache/$SHA
                     volumeMounts:
                       - name: workdir
-                        mountPath: /go
+                        mountPath: /go/src/github.com/golang
                       - name: workflow-cache-pvc
                         mountPath: /mnt/cache
                 - name: cache-cleanup
