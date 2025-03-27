@@ -188,7 +188,8 @@ spec:
                       git:
                         repo: "{{inputs.parameters.repo}}"
                         revision: "{{inputs.parameters.sha}}"
-                  container:
+                  #container:
+                  script:
                     image: golang:1.8
                     command: [sh, -c]
                     args: 
