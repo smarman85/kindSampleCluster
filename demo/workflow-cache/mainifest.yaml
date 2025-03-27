@@ -193,7 +193,7 @@ spec:
                     command: [sh, -c]
                     args: 
                      - |
-                        SHA=$(sha256sum go.sum | awk '{print $1}')
+                        SHA=$(sha256sum /go/src/github.com/golang/example/go.sum | awk '{print $1}')
                         if [ -f /mnt/cache/$SHA ]; then
                           echo "cached"
                         else
@@ -224,8 +224,12 @@ spec:
                     args:
                       - |
                         echo "No cache found. Fetching dependencies..."
+                        cd /go/src/github.com/golang/example
                         go mod tidy
+                        go get golang.org/x/example/hello/reverse
+                        cd hello
                         go build -o app .
+                        cd ../
                         SHA=$(sha256sum go.sum | awk '{print $1}')
                         cp -r /go/pkg/mod /mnt/cache/$SHA
                     volumeMounts:
