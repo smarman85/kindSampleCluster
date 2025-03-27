@@ -224,8 +224,9 @@ spec:
                     args:
                       - |
                         echo "No cache found. Fetching dependencies..."
-                        cd /go/src/github.com/golang/example/hello
-                        git status
+                        cd /go/src/github.com/golang/example
+                        go mod tidy
+                        cd hello
                         go get golang.org/x/example/hello/reverse
                         go install
                         cd ../
