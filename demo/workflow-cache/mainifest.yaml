@@ -194,7 +194,7 @@ spec:
                     args: 
                      - |
                         SHA=$(sha256sum /go/src/github.com/golang/example/go.sum | awk '{print $1}')
-                        if [ -f /mnt/cache/$SHA ]; then
+                        if [ -d /mnt/cache/$SHA ]; then
                           echo "cached"
                         else
                           echo "not_cached"
