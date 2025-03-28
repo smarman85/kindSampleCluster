@@ -146,6 +146,13 @@ spec:
                     resources:
                       requests:
                         storage: 1Gi
+                - metadata:
+                    name: binary
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
                 templates:
                 - name: ci
                   inputs:
@@ -222,6 +229,8 @@ spec:
                     volumeMounts:
                       - name: workdir
                         mountPath: /go/src/github.com/golang
+                      - name: binary
+                        mountPath: /go/bin
                       - name: workflow-cache-pvc
                         mountPath: /mnt/cache
                 - name: download-and-cache
@@ -242,6 +251,8 @@ spec:
                     volumeMounts:
                       - name: workdir
                         mountPath: /go/src/github.com/golang
+                      - name: binary
+                        mountPath: /go/bin
                       - name: workflow-cache-pvc
                         mountPath: /mnt/cache
                 - name: cache-cleanup
@@ -268,8 +279,8 @@ spec:
                         cat /etc/os-release ;
                         {{inputs.parameters.fileName}}
                     volumeMounts:
-                    - name: workdir
-                      mountPath: /go
+                    - name: binary
+                      mountPath: /go/bin
           parameters:
             - src:
                 dependencyName: ci-deps
