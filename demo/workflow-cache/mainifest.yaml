@@ -217,7 +217,8 @@ spec:
                         echo "Using cached dependencies..."
                         mkdir -p /go/pkg
                         cp -R /mnt/cache/$SHA /go/pkg/mod
-                        go build -o app .
+                        cd /go/src/github.com/golang/example/hello
+                        go install
                     volumeMounts:
                       - name: workdir
                         mountPath: /go
