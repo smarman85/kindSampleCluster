@@ -127,6 +127,10 @@ spec:
                   - name: fileName
                     value: "test.yaml"
                 entrypoint: ci
+                volumes:
+                - name: workflow-cache-pvc
+                  persistentVolumeClaim:
+                    claimName: workflow-cache-pvc
                 volumeClaimTemplates:
                 # - metadata:
                 #     name: workflow-cache-pvc
