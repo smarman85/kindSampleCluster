@@ -215,6 +215,7 @@ spec:
                     args:
                       - |
                         echo "Using cached dependencies..."
+                        mkdir -p /go/pkg
                         cp -R /mnt/cache/$SHA /go/pkg/mod
                         go build -o app .
                     volumeMounts:
