@@ -223,6 +223,7 @@ spec:
                       - |
                         echo "Using cached dependencies..."
                         mkdir -p /go/pkg
+                        SHA=$(sha256sum /go/src/github.com/golang/example/go.sum | awk '{print $1}')
                         cp -R /mnt/cache/$SHA /go/pkg/mod
                         cd /go/src/github.com/golang/example/hello
                         go install
