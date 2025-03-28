@@ -221,7 +221,7 @@ spec:
                         go install
                     volumeMounts:
                       - name: workdir
-                        mountPath: /go/src/github.com/golangt c
+                        mountPath: /go/src/github.com/golang
                       - name: workflow-cache-pvc
                         mountPath: /mnt/cache
                 - name: download-and-cache
