@@ -186,6 +186,8 @@ spec:
                         parameters:
                           - name: fileName
                             value: "{{inputs.parameters.fileName}}"
+                  - - name: build-container
+                      template: docker-build-image
                   - - name: cleanup
                       template: cache-cleanup
                 - name: sha-check
@@ -282,6 +284,23 @@ spec:
                     volumeMounts:
                     - name: binary
                       mountPath: /go/bin
+                - name: docker-build-image
+                  container:
+                    image: gcr.io/kaniko-project/executor:latest
+                    command: [/kaniko/executor"]
+                    args:
+                      - "--dockerfile=/workspace/Dockerfile"
+                      - "--context=dir:///workspace"
+                      - "--destination=myregistry.com/myapp:latest"
+                      - "--cache=true"
+                      - "--cache-dir=/mnt/cache/docker"
+                    volumeMounts:
+                      - name: workdir
+                        mountPath: /go/src/github.com/golang
+                      - name: binary
+                        mountPath: /go/bin
+                      - name: workflow-cache-pvc
+                        mountPath: /mnt/cache
           parameters:
             - src:
                 dependencyName: ci-deps
