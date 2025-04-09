@@ -115,6 +115,7 @@ test-ci:
 
 init-sealed-secrets:
 	kubectl apply -n argocd -f ./charts/crds/sealed-secrets.yaml
+	kubectl apply -n argocd -f ./charts/crds/sealed-secrets-web.yaml
 
 demo-dag:
 	kubectl apply -n argo -f ./demo/dag/install.yaml
