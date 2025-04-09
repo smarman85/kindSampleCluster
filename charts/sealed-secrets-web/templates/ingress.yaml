@@ -1,0 +1,69 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "sealed-secrets-web.fullname" . -}}
+{{- $cleanSemVersion := semver .Capabilities.KubeVersion.Version }}
+{{- $svcPort := .Values.service.port -}}
+{{- if and .Values.ingress.className (not ($cleanSemVersion | (semver "1.18.0").Compare | toString | regexMatch "0|-1")) }}
+  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+  {{- end }}
+{{- end }}
+{{- if $cleanSemVersion | (semver "1.19.0").Compare | toString | regexMatch "0|-1" -}}
+apiVersion: networking.k8s.io/v1
+{{- else if $cleanSemVersion | (semver "1.14.0").Compare | toString | regexMatch "0|-1" -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "sealed-secrets-web.labels" . | nindent 4 }}
+    {{- with .Values.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.ingress.className ( $cleanSemVersion | (semver "1.18.0").Compare | toString | regexMatch "0|-1" ) }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- else if .Values.ingress.defaultTls }}
+  tls:
+    - {}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType ( $cleanSemVersion | (semver "1.18.0").Compare | toString | regexMatch "0|-1" ) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if $cleanSemVersion | (semver "1.19.0").Compare | toString | regexMatch "0|-1" }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
