@@ -96,10 +96,17 @@ spec:
           image: "tchiotludo/akhq:0.25.1"
           imagePullPolicy: Always
           env:
+            - name: MICRONAUT_ENVIRONMENTS
+              value: secrets
+            - name: MICRONAUT_CONFIG_FILES
+              value: /app/application.yml,/app/application-secrets.yml
           volumeMounts:
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
+            - name: secrets
+              mountPath: /app/application-secrets.yml
+              subPath: application-secrets.yml
           ports:
             - name: http
               containerPort: 8080
@@ -131,3 +138,6 @@ spec:
       - name: config
         configMap:
           name: akhq-release-name
+      - name: secrets
+        secret:
+          secretName: akhq-release-name-secrets

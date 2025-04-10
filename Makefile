@@ -117,6 +117,9 @@ init-sealed-secrets:
 	kubectl apply -n argocd -f ./charts/crds/sealed-secrets.yaml
 	kubectl apply -n argocd -f ./charts/crds/sealed-secrets-web.yaml
 
+akhq:
+	kubectl apply -n argocd -f ./charts/crds/akhq.yaml
+
 demo-dag:
 	kubectl apply -n argo -f ./demo/dag/install.yaml
 
@@ -225,7 +228,6 @@ multi-sensor-portforward:
 	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 12000:12000 &
 	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 13000:13000 &
 	kubectl -n argo-events port-forward $(WEBHOOK_MULTI) 14000:14000 &
-
 
 demo-webhook-loop:
 	curl -d '{"peanut-butter":"jelly time"}' -H "Content-Type: application/json" -X POST http://localhost:12000/example
