@@ -12,7 +12,7 @@ metadata:
   annotations:
 spec:
   rules:
-  - host: "swissarmyknife.us.niumops.com"
+  - host: "swissarmyknife.us.companyops.com"
     http:
       paths:
       - path: /tf
@@ -22,7 +22,7 @@ spec:
             port:
               number: 80
         pathType: Exact
-  - host: "swissarmyknife.us.niumops.com"
+  - host: "swissarmyknife.us.companyops.com"
     http:
       paths:
       - path: /kustomize

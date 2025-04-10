@@ -85,7 +85,7 @@ spec:
                     - name: YOPASS_URL_INT
                       value: http://yopass-service.yopass.svc
                     - name: YOPASS_URL_EXT
-                      value: https://yopass.us.niumops.com
+                      value: https://yopass.us.companyops.com
                     - name: CONFIG_SECRETS
                       value: us/swissarmyknife/config_secrets
                     volumeMounts:
@@ -183,7 +183,7 @@ spec:
                     - name: YOPASS_URL_INT
                       value: http://yopass-service.yopass.svc
                     - name: YOPASS_URL_EXT
-                      value: https://yopass.us.niumops.com
+                      value: https://yopass.us.companyops.com
                     - name: CONFIG_SECRETS
                       value: us/swissarmyknife/config_secrets
                     volumeMounts:
