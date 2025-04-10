@@ -101,6 +101,9 @@ spec:
             - name: MICRONAUT_CONFIG_FILES
               value: /app/application.yml,/app/application-secrets.yml
           volumeMounts:
+            - mountPath: /app
+              name: kafka-certificates
+              readOnly: true
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
@@ -135,6 +138,9 @@ spec:
           resources:
             {}
       volumes:
+      - name: kafka-certificates
+        secret:
+          secretName: akhq-certificates
       - name: config
         configMap:
           name: akhq-release-name
