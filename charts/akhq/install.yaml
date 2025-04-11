@@ -103,7 +103,7 @@ spec:
           volumeMounts:
             - mountPath: /mnt
               name: kafka-certificates
-              readOnly: true
+              readOnly: false
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
