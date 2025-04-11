@@ -101,7 +101,7 @@ spec:
             - name: MICRONAUT_CONFIG_FILES
               value: /app/application.yml,/app/application-secrets.yml
           volumeMounts:
-            - mountPath: /app
+            - mountPath: /mnt
               name: kafka-certificates
               readOnly: true
             - name: config
