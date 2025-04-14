@@ -140,7 +140,7 @@ spec:
       volumes:
       - name: akhq-kafka-config
         secret:
-          secretName: akhq-certificates
+          secretName: akhq-kafka-config
       - name: config
         configMap:
           name: akhq-release-name
