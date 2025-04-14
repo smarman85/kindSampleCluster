@@ -103,11 +103,12 @@ spec:
           volumeMounts:
             - mountPath: /mnt
               name: akhq-kafka-config
-              readOnly: false
+              readOnly: true
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
             - name: akhq-kafka-config
+              readOnly: true
               mountPath: /app/application-secrets.yml
               subPath: application-secrets.yml
           ports:
