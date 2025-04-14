@@ -138,7 +138,7 @@ spec:
           resources:
             {}
       volumes:
-      - name: kafka-certificates
+      - name: akhq-kafka-config
         secret:
           secretName: akhq-certificates
       - name: config
