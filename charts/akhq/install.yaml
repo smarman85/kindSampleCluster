@@ -102,12 +102,12 @@ spec:
               value: /app/application.yml,/app/application-secrets.yml
           volumeMounts:
             - mountPath: /mnt
-              name: kafka-certificates
+              name: akhq-kafka-config
               readOnly: false
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
-            - name: secrets
+              name: akhq-kafka-config
               mountPath: /app/application-secrets.yml
               subPath: application-secrets.yml
           ports:
@@ -144,6 +144,3 @@ spec:
       - name: config
         configMap:
           name: akhq-release-name
-      - name: secrets
-        secret:
-          secretName: akhq-release-name-secrets
