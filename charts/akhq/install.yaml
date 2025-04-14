@@ -107,7 +107,7 @@ spec:
             - name: config
               mountPath: /app/application.yml
               subPath: application.yml
-              name: akhq-kafka-config
+            - name: akhq-kafka-config
               mountPath: /app/application-secrets.yml
               subPath: application-secrets.yml
           ports:
