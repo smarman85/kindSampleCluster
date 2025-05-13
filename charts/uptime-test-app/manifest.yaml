@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: uptime-kuma-service
-        image: localhost/statusreport-test-svc:latest
+        image: statusreport-test-svc:latest
         imagePullPolicy: Always
         tty: true
         stdin: true
