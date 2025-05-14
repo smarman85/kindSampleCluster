@@ -34,8 +34,8 @@ spec:
     spec:
       containers:
       - name: uptime-kuma-service
-        image: statusreport-test-svc:latest
-        imagePullPolicy: Always
+        image: docker.io/library/statusreport-test-svc:latest
+        imagePullPolicy: Never ###  use never for local kind images
         tty: true
         stdin: true
         command: ["/bin/bash"]
