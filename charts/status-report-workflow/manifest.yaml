@@ -78,19 +78,19 @@ spec:
           parameters:
             - src:
                 dependencyName: report-dep
-                dataKey: body.heartbeat.localDateTime
+                dataKey: heartbeat.localDateTime
               dest: spec.arguments.parameters.0.value
             - src:
                 dependencyName: report-dep
-                dataKey: body.heartbeat.status
+                dataKey: heartbeat.status
               dest: spec.arguments.parameters.1.value
             - src:
                 dependencyName: report-dep
-                dataKey: body.heartbeat.msg
+                dataKey: heartbeat.msg
               dest: spec.arguments.parameters.2.value
             - src:
                 dependencyName: report-dep
-                dataKey: body.monitor.name
+                dataKey: monitor.name
               dest: spec.arguments.parameters.3.value
     # heartbeat.localDateTime  = sample "2025-05-09 15:12:04"
     # heartbeat.status = sample 1 is up 0 is down

@@ -234,3 +234,14 @@ demo-webhook-loop:
 
 dev-envs:
 	kubectl apply -f charts/crds/devEnv-aoa.yaml
+
+
+#### Uptime/Reporting
+uptime-build:
+	kubectl apply -f charts/crds/uptime-kuma.yaml -n argocd
+	kubectl apply -f charts/crds/charts/crds/uptimeApp.yaml -n argocd
+	kubectl apply -f charts/crds/statusReport.yaml -n argocd
+
+uptime-portforward:
+	kubectl -n argo-events port-forward svc/webhook-eventsource-svc 12000:12000 -n status-report &
+	kubectl -n argo-events port-forward svc/uptime-kuma-service 8080:80 -n uptime-kuma &
