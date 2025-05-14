@@ -1,0 +1,124 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: webhook
+spec:
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
+  webhook:
+    # event-source can run multiple HTTP servers. Simply define a unique port to start a new HTTP server
+    report:
+      # port to run HTTP server on
+      port: "12000"
+      # endpoint to listen to
+      endpoint: /report
+      # HTTP request method to allow. In this case, only POST requests are accepted
+      method: POST
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: webhook
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: report-dep
+      eventSourceName: webhook
+      eventName: report
+  triggers:
+    - template:
+        name: webhook-workflow-trigger
+        conditions: report-dep
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: report-webhook-
+              spec:
+                entrypoint: report
+                arguments:
+                  parameters:
+                  - name: localDateTime
+                    value: default
+                  - name: status
+                    value: default
+                  - name: message
+                    value: default
+                  - name: appName
+                    value: default
+                templates:
+                - name: report
+                  inputs:
+                    parameters:
+                    - name: localDateTime
+                    - name: status
+                    - name: message
+                    - name: appName
+                  container:
+                    image: localhost/statusreport:latest
+                    command: ["app"]
+                    args:
+                    # go run main.go report -a mine -s 0 -t "2025-05-012 15:12:06" -m "testing message is up"
+                      - "report"
+                      - "-a"
+                      - "{{ inputs.parameters.appName }}"
+                      - "-s"
+                      - "{{ inputs.parameters.status }}"
+                      - "-t"
+                      - "{{ inputs.parameters.localDateTime }}"
+                      - "-m"
+                      - "{{ inputs.parameters.message }}"
+          parameters:
+            - src:
+                dependencyName: report-dep
+                dataKey: body.heartbeat.localDateTime
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: report-dep
+                dataKey: body.heartbeat.status
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: report-dep
+                dataKey: body.heartbeat.msg
+              dest: spec.arguments.parameters.2.value
+            - src:
+                dependencyName: report-dep
+                dataKey: body.monitor.name
+              dest: spec.arguments.parameters.3.value
+    # heartbeat.localDateTime  = sample "2025-05-09 15:12:04"
+    # heartbeat.status = sample 1 is up 0 is down
+    # heartbeat.msg = sample "ping: test-svc: Name or service not known\n",
+    # monitor.name = sample "test"
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: EventBus
+metadata:
+  name: default
+spec:
+  nats:
+    native:
+      # Optional, defaults to 3. If it is < 3, set it to 3, that is the minimal requirement.
+      replicas: 3
+      # Optional, authen strategy, "none" or "token", defaults to "none"
+      auth: token
+#      containerTemplate:
+#        resources:
+#          requests:
+#            cpu: "10m"
+#      metricsContainerTemplate:
+#        resources:
+#          requests:
+#            cpu: "10m"
+#      antiAffinity: false
+#      persistence:
+#        storageClassName: standard
+#        accessMode: ReadWriteOnce
+#        volumeSize: 10Gi
