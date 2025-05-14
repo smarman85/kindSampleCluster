@@ -161,6 +161,39 @@ $ make demo-webhook
 $ make demo-webhook-run
 ```
 
+# Using local podman images in kind
+> [!NOTE]
+> The following steps are specific to podman and use some experimental features
+Save your tagged image to a tar.gz file and load it into your named kind cluster
+```BASH
+# show clusters:
+kind get clusters
+using podman due to KIND_EXPERIMENTAL_PROVIDER
+enabling experimental podman provider
+lab
+
+# save image and pipe it into your cluster:
+podman save docker.io/louislam/uptime-kuma:1.22.1 -o /tmp/uptime-kuma.tar && \
+  kind load image-archive /tmp/uptime-kuma.tar --name lab
+```
+
+> [!IMPORTANT]
+> Now you should be able to use the exact tag in your local but you have to set
+> the image pull policy to `Never` or if not present. This will keep the container
+> runtime from trying to pull images from an outside source
+
+ex container spec:
+```YAML
+  container:
+    image: localhost/statusreport:latest
+    imagePullPolicy: Never ### use local cached image
+    command: ["/app/report"]
+    args:
+      - do
+      - some
+      - work
+```
+
 ---
 ##  More examples:
 [Argo workflows](https://github.com/argoproj/argo-workflows/blob/main/examples/cron-workflow.yaml)
