@@ -183,7 +183,7 @@ podman save localhost/statusreport:latest -o statusreport:tar && \
 ---
 > [!IMPORTANT]
 > Now you should be able to use the exact tag in your local but you have to set
-> the image pull policy to `Never` or if not present. This will keep the container
+> the image pull policy to `Never` or `IfNotPresent`. This will keep the container
 > runtime from trying to pull images from an outside source
 
 ex container spec:

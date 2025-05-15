@@ -62,7 +62,7 @@ spec:
                     - name: message
                     - name: appName
                   container:
-                    image: localhost/statusreport:latest
+                    image: localhost/statusreport:v1
                     imagePullPolicy: Never ### use local cached image
                     command: ["/app/report"]
                     args:
@@ -76,6 +76,11 @@ spec:
                       - "{{ inputs.parameters.localDateTime }}"
                       - "-m"
                       - "{{ inputs.parameters.message }}"
+                    env:
+                      - name: AWS_ENDPOINT_URL
+                        value: http://localstack.localstack:4566
+                      - name: SM_PATH
+                        value: "test/ssh-key"
           parameters:
             - src:
                 dependencyName: report-dep
