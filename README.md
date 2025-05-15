@@ -161,10 +161,13 @@ $ make demo-webhook
 $ make demo-webhook-run
 ```
 
+---
 # Using local podman images in kind
 > [!NOTE]
 > The following steps are specific to podman and use some experimental features
 Save your tagged image to a tar.gz file and load it into your named kind cluster
+
+---
 ```BASH
 # show clusters:
 kind get clusters
@@ -173,10 +176,11 @@ enabling experimental podman provider
 lab
 
 # save image and pipe it into your cluster:
-podman save docker.io/louislam/uptime-kuma:1.22.1 -o /tmp/uptime-kuma.tar && \
-  kind load image-archive /tmp/uptime-kuma.tar --name lab
+podman save localhost/statusreport:latest -o statusreport:tar && \
+  kind load image-archive statusreport.tar --name lab
 ```
 
+---
 > [!IMPORTANT]
 > Now you should be able to use the exact tag in your local but you have to set
 > the image pull policy to `Never` or if not present. This will keep the container
