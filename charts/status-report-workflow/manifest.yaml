@@ -64,7 +64,7 @@ spec:
                   container:
                     image: localhost/statusreport:v1
                     imagePullPolicy: Never ### use local cached image
-                    command: ["/app/app"]
+                    command: ["/app"]
                     args:
                     # go run main.go report -a mine -s 0 -t "2025-05-012 15:12:06" -m "testing message is up"
                       - "report"
