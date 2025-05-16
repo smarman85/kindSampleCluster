@@ -2,9 +2,15 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: pi-
+  name: pi
+  labels:
+    job-hash: "5.40.0"
 spec:
+  ttlSecondsAfterFinished: 60
   template:
+    metadata:
+      labels:
+        job-hash: "5.40.0"
     spec:
       containers:
       - name: pi
