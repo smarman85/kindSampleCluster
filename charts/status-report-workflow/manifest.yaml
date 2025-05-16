@@ -81,6 +81,12 @@ spec:
                         value: http://localstack.localstack:4566
                       - name: SM_PATH
                         value: "test/ssh-key"
+                      - name: AWS_ACCESS_KEY_ID
+                        value: fakelocalhost
+                      - name: AWS_SECRET_ACCESS_KEY
+                        value: fakelocalhost
+                      - name: AWS_REGION
+                        value: us-east-1
           parameters:
             - src:
                 dependencyName: report-dep
