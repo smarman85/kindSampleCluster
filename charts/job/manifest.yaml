@@ -4,17 +4,20 @@ kind: Job
 metadata:
   name: pi
   labels:
-    job-hash: "5.34.0"
+    #job-hash: "5.34.0"
+    job-hash: "5.40.0"
 spec:
   #ttlSecondsAfterFinished: 60
   template:
     metadata:
       labels:
-        job-hash: "5.34.0"
+        #job-hash: "5.34.0"
+        job-hash: "5.40.0"
     spec:
       containers:
       - name: pi
-        image: perl:5.34.0
+        #image: perl:5.34.0
+        image: perl:5.40.0
         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
       restartPolicy: Never
   backoffLimit: 4
