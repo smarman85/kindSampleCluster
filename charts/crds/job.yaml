@@ -1,0 +1,25 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: test-job
+  namespace: argocd
+  annotations:
+    meta.helm.sh/release-name: argo-events
+    meta.helm.sh/release-namespace: argocd
+spec:
+  destination:
+    namespace: jobs
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: charts/job
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  revisionHistoryLimit: 1
