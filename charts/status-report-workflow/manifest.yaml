@@ -62,7 +62,7 @@ spec:
                     - name: message
                     - name: appName
                   container:
-                    image: localhost/statusreport:v1
+                    image: localhost/statusreport:v2t c
                     imagePullPolicy: Never ### use local cached image
                     command: ["/app"]
                     args:
