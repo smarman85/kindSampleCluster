@@ -239,10 +239,10 @@ dev-envs:
 #### Uptime/Reporting
 uptime-build:
 	kubectl apply -f charts/crds/uptime-kuma.yaml -n argocd
-	kubectl apply -f charts/crds/charts/crds/uptimeApp.yaml -n argocd
+	kubectl apply -f charts/crds/uptimeApp.yaml -n argocd
 	kubectl apply -f charts/crds/statusReport.yaml -n argocd
 	kubectl apply -f charts/infra/argo-events/sensor-default-rbac.yaml -n status-report
 
 uptime-portforward:
 	kubectl -n argo-events port-forward svc/webhook-eventsource-svc 12000:12000 -n status-report &
-	kubectl -n argo-events port-forward svc/uptime-kuma-service 8080:80 -n uptime-kuma &
+	kubectl -n argo-events port-forward svc/uptime-kuma-service 8090:80 -n uptime-kuma &
