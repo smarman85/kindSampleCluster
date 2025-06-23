@@ -6,6 +6,7 @@ metadata:
 spec:
   provider: aws
   parameters:
+    awsEndpoint: "http://localstack:localstack:4566"
     objects: |
       - objectName: "qa/csi-driver-deploy/creds"
         objectType: "secretsmanager"
