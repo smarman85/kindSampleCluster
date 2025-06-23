@@ -4,6 +4,7 @@ kind: SecretProviderClass
 metadata:
   name: csi-driver-secrets
 spec:
+  provider: aws
   parameters:
     objects: |
       - objectName: "qa/csi-driver-deploy/creds"
