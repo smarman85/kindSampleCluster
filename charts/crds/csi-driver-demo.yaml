@@ -1,0 +1,21 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: csi-driver-demo
+  namespace: argocd
+spec:
+  destination:
+    namespace: csi-driver-demo
+    name: in-cluster
+  project: default
+  source:
+    path: demo/csi-driver/
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  revisionHistoryLimit: 2
