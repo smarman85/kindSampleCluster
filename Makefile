@@ -249,7 +249,7 @@ uptime-portforward:
 
 
 csi-driver:
-	kubectl apply -f charts/crds/secrets-store-csi-driver.yaml -n argocd
+	kubectl apply -f charts/crds/secrets-store-csi-driver.yaml --set syncSecret.enabled=true --set enableSecretRotation=true --set-string linux.providers="aws"-n argocd
 
 csi-driver-app:
 	kubectl apply -f charts/crds/csi-driver-demo.yaml -n argocd
