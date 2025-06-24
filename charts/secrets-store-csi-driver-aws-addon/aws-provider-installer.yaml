@@ -62,6 +62,17 @@ spec:
           imagePullPolicy: Always
           args:
               - --provider-volume=/var/run/secrets-store-csi-providers
+          env:
+            - name: AWS_REGION
+              value: us-east-1
+            - name: AWS_ACCESS_KEY_ID
+              value: "ZHVtbXktYWNjZXNzLWtleQ==" # Required. fake creds for localstack
+            - name: AWS_SECRET_ACCESS_KEY 
+              value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
+            - name: AWS_SESSION_TOKEN
+              value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
+            - name: AWS_ENDPOINT_URL
+              value: "http://localstack.localstack.svc.cluster.local:4566" # Localstack endpoint
           resources:
             requests:
               cpu: 50m
