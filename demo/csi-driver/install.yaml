@@ -18,6 +18,8 @@ spec:
     objects: |
       - objectName: "qa/csi-driver-deploy/creds"
         objectType: "secretsmanager"
+    roleArn: "" # Empty string bypasses IRSA check
+    region: "us-east-1"
 ---
 apiVersion: apps/v1
 kind: Deployment
