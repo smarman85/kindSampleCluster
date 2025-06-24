@@ -249,10 +249,12 @@ uptime-portforward:
 
 
 csi-driver:
-	# kubectl apply -f charts/crds/secrets-store-csi-driver.yaml -n argocd
-	kubectl apply -f charts/secrets-store-csi-driver-aws-addon/aws-provider-installer.yaml -n kube-system
+	kubectl apply -f charts/crds/secrets-store-csi-driver.yaml -n argocd
+
+csi-driver-aws:
+	kubectl apply -f charts/crds/secrets-store-csi-driver-aws-addon.yaml -n argocd
 
 csi-driver-app:
 	kubectl apply -f charts/crds/csi-driver-demo.yaml -n argocd
 
-csi-driver-ex: csi-driver localstack-apply
+csi-driver-ex: csi-driver csi-driver-aws localstack-apply
