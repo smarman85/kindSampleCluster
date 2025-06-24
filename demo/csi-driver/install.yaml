@@ -14,6 +14,7 @@ metadata:
 spec:
   provider: aws
   parameters:
+    awsEndpoint: "http://localstack.localstack.svc.cluster.local:4566" # Localstack endpoint
     objects: |
       - objectName: "qa/csi-driver-deploy/creds"
         objectType: "secretsmanager"
