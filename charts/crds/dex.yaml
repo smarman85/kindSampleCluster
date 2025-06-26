@@ -14,7 +14,8 @@ spec:
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
     helm:
-      releaseName: dex
+      valueFiles:
+        - ../../overrides/dex/values.yaml
   syncPolicy:
     automated:
       selfHeal: true
