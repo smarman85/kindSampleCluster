@@ -37,17 +37,17 @@ spec:
       serviceAccountName: fake-it
       containers:
       - name: csi-driver
-        env:
-        - name: AWS_REGION
-          value: us-east-1
-        - name: AWS_ACCESS_KEY_ID
-          value: "ZHVtbXktYWNjZXNzLWtleQ==" # Required. fake creds for localstack
-        - name: AWS_SECRET_ACCESS_KEY 
-          value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
-        - name: AWS_SESSION_TOKEN
-          value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
-        - name: AWS_ENDPOINT_URL
-          value: "http://localstack:localstack:4566" # Localstack endpoint
+        # env:
+        # - name: AWS_REGION
+        #   value: us-east-1
+        # - name: AWS_ACCESS_KEY_ID
+        #   value: "ZHVtbXktYWNjZXNzLWtleQ==" # Required. fake creds for localstack
+        # - name: AWS_SECRET_ACCESS_KEY 
+        #   value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
+        # - name: AWS_SESSION_TOKEN
+        #   value: "ZHVtbXktc2VjcmV0LWtleQ==" # Required. fake creds for localstack
+        # - name: AWS_ENDPOINT_URL
+        #   value: "http://localstack:localstack:4566" # Localstack endpoint
         image: golang:1.20-bullseye
         tty: true
         stdin: true
