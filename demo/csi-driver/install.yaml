@@ -4,8 +4,8 @@ kind: ServiceAccount
 metadata:
   name: fake-it
   namespace: csi-driver-demo
-  # annotations:
-  #   eks.amazonaws.com/role-arn: ""  # Empty string bypasses IRSA check
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::000000000000:role/csi-driver"  # Empty string bypasses IRSA check
 ---
 apiVersion: secrets-store.csi.x-k8s.io/v1
 kind: SecretProviderClass

@@ -235,7 +235,6 @@ demo-webhook-loop:
 dev-envs:
 	kubectl apply -f charts/crds/devEnv-aoa.yaml
 
-
 #### Uptime/Reporting
 uptime-build:
 	kubectl apply -f charts/crds/uptime-kuma.yaml -n argocd
@@ -247,7 +246,7 @@ uptime-portforward:
 	kubectl -n argo-events port-forward svc/webhook-eventsource-svc 12000:12000 -n status-report &
 	kubectl -n argo-events port-forward svc/uptime-kuma-service 8090:80 -n uptime-kuma &
 
-
+### Secrets Store CSI Driver
 csi-driver:
 	kubectl apply -f charts/crds/secrets-store-csi-driver.yaml -n argocd
 
@@ -257,4 +256,4 @@ csi-driver-aws:
 csi-driver-app:
 	kubectl apply -f charts/crds/csi-driver-demo.yaml -n argocd
 
-csi-driver-ex: csi-driver csi-driver-aws localstack-apply
+csi-driver-ex: argocd-ui csi-driver-aws localstack-apply
