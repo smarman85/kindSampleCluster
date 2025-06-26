@@ -10,7 +10,7 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: demo/dex/
+    path: demo/dex/helm-charts/
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
