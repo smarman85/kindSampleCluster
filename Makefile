@@ -246,6 +246,10 @@ uptime-portforward:
 	kubectl -n argo-events port-forward svc/webhook-eventsource-svc 12000:12000 -n status-report &
 	kubectl -n argo-events port-forward svc/uptime-kuma-service 8090:80 -n uptime-kuma &
 
+
+dex-config:
+	kubectl apply -f charts/crds/dex.yaml -n argocd
+
 ### Secrets Store CSI Driver
 csi-driver:
 	kubectl apply -f charts/crds/secrets-store-csi-driver.yaml -n argocd
