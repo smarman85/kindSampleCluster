@@ -261,3 +261,11 @@ csi-driver-app:
 	kubectl apply -f charts/crds/csi-driver-demo.yaml -n argocd
 
 csi-driver-ex: argocd-ui csi-driver-aws localstack-apply
+
+### ESO
+eso-install:
+	kubectl apply -f charts/crds/eso.yaml -n argocd
+
+eso-demo:
+	kubectl apply -f charts/crds/eso-app.yaml -n argocd
+

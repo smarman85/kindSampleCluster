@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: awssm-secret
+data:
+  ### fake creds for localstack
+  access-key: S0VZSUQ=
+  secret-access-key: U0VDUkVUS0VZ
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: SecretStore
+metadata:
+  name: secretstore-demo
+spec:
+  provider:
+    aws:
+      service: SecretsManager
+      region: us-east-1
+      auth:
+        # for OCID
+        # jwt:
+        #   serviceAccountRef:
+        #     name: svc-account-name
+        # localstack:
+        secretRef:
+          accessKeyIDSecretRef:
+            name: awssm-secret
+            key: access-key
+          secretAccessKeySecretRef:
+            name: awssm-secret
+            key: secret-access-key
+---
+apiVersion: external-secrets.io/v1alpha1
+kind: ExternalSecret
+metadata:
+  name: external-secret-demo
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: secretstore-demo
+    kind: SecretStore
+  target:
+    name: app-secret
+    creationPolicy: Owner
+  data:
+  - secretKey: USERNAME # name of secret key in the k8s secret
+    remoteRef:
+      key: qa/csi-driver-deploy/creds # path in secrets manager
+      property: username # key in the secrets manager path
+  - secretKey: PASSWORD # name of secret key in the k8s secret
+    remoteRef:
+      key: qa/csi-driver-deploy/creds # path in secrets manager
+      property: password # key in the secrets manager path
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eso-demo-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: USERNAME
+              name: app-secret
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: PASSWORD
+              name: app-secret
+        image: golang:1.20-bullseye
+        tty: true
+        stdin: true
+        command: ["/bin/sh"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
