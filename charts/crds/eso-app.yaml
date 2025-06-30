@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     path: demo/eso/install.yaml
-    repoURL: https://github.com/smarman85/infra101.git
+    repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
     automated:
