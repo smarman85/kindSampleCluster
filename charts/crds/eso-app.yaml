@@ -10,7 +10,7 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: demo/eso
+    path: demo/eso/install.yaml
     repoURL: https://github.com/smarman85/infra101.git
     targetRevision: HEAD
   syncPolicy:
