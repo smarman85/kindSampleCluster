@@ -17,6 +17,8 @@ spec:
     aws:
       service: SecretsManager
       region: us-east-1
+      # localstack config
+      endpoint: "http://localstack.localstack:4566"
       auth:
         # for OCID
         # jwt:
