@@ -10,7 +10,7 @@ spec:
     name: in-cluster
   project: default
   source:
-    path: demo/eso/install.yaml
+    path: demo/eso
     repoURL: https://github.com/smarman85/kindSampleCluster.git
     targetRevision: HEAD
   syncPolicy:
