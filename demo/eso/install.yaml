@@ -1,14 +1,14 @@
-# ---
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: awssm-secret
-#   annotations:
-#     argocd.argoproj.io/sync-wave: "-3"
-# data:
-#   ### fake creds for localstack
-#   access-key: S0VZSUQ=
-#   secret-access-key: U0VDUkVUS0VZ
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: awssm-secret
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+data:
+  ### fake creds for localstack
+  access-key: S0VZSUQ=
+  secret-access-key: U0VDUkVUS0VZ
 ---
 apiVersion: external-secrets.io/v1
 kind: SecretStore
@@ -23,6 +23,7 @@ spec:
       region: us-east-1
       # localstack config
       endpoint: "http://localstack.localstack:4566"
+      useStaticCredentials: true # force aws sdk to skip IMDS 
       auth:
         # for OCID
         # jwt:
