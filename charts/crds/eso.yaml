@@ -18,8 +18,21 @@ spec:
         installCRDs: true
         webhook:
           enabled: false
-      valueFiles:
-        - overrides/eso/values.yaml
+        extraEnv:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: awssm-secret
+                key: access-key
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: awssm-secret
+                key: secret-access-key
+          - name: AWS_REGION
+            value: us-east-1
+          - name: AWS_ENDPOINT_URL
+            value: http://localstack.localstack:4566
   syncPolicy:
     automated:
       selfHeal: true
