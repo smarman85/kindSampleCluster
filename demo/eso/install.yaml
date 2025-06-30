@@ -62,6 +62,10 @@ metadata:
   labels:
     app: eso-demo-app
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eso-demo-app
   template:
     metadata:
       labels:
