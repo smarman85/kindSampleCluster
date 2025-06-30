@@ -18,8 +18,8 @@ spec:
         installCRDs: true
         webhook:
           enabled: false
-    #   valueFiles:
-    #     - ../../overrides/dex/values.yaml
+      valueFiles:
+        - ../../overrides/eso/values.yaml
   syncPolicy:
     automated:
       selfHeal: true

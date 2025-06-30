@@ -22,8 +22,6 @@ spec:
       service: SecretsManager
       region: us-east-1
       # localstack config
-      endpoint: "http://localstack.localstack:4566"
-      useStaticCredentials: true # force aws sdk to skip IMDS 
       auth:
         # for OCID
         # jwt:
