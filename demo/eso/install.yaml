@@ -59,8 +59,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: eso-demo-app
+  labels:
+    app: eso-demo-app
 spec:
   template:
+    metadata:
+      labels:
+        app: eso-demo-app
     spec:
       containers:
       - name: app
