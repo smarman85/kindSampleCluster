@@ -20,15 +20,9 @@ spec:
           enabled: false
         extraEnv:
           - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: awssm-secret
-                key: access-key
+            value: default
           - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: awssm-secret
-                key: secret-access-key
+            value: default
           - name: AWS_REGION
             value: us-east-1
           - name: AWS_ENDPOINT_URL
