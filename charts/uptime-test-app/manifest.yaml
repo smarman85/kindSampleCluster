@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: uptime-kuma-service
-        image: docker.io/library/statusreport-test-svc:latest
+        image: golang:1.20-bullseye
         imagePullPolicy: Never ###  use never for local kind images
         tty: true
         stdin: true
