@@ -20,7 +20,7 @@ metadata:
   name: local-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
@@ -37,7 +37,6 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: local-pv
 ---
 apiVersion: apps/v1
 kind: Deployment
