@@ -14,6 +14,14 @@ spec:
     name: http-port
     targetPort: 3001
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-uptimekuma
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
