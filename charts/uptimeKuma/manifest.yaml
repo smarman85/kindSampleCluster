@@ -72,3 +72,24 @@ spec:
       - name: uptimekuma-storage-volume
         persistentVolumeClaim:
           claimName: efs-uptimekuma
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: report-pod
+spec:
+  containers:
+  - name: reporter
+    image: golang:1.20-bullseye
+    tty: true
+    stdin: true
+    command: ["/bin/bash"]
+    volumeMounts:
+    - name: uptimekuma-storage-volume
+      mountPath: /app/data
+      readOnly: true
+  volumes:
+  - name: uptimekuma-storage-volume
+    persistentVolumeClaim:
+      claimName: efs-uptimekuma
+      readOnly: true
