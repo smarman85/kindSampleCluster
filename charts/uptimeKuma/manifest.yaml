@@ -19,21 +19,22 @@ kind: PersistentVolume
 metadata:
   name: local-pv
 spec:
+  storageClassName: local-path  # <-- add this
   capacity:
     storage: 5Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /data/kuma  # Path inside the kind node container
+    path: /data/kuma
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: efs-uptimekuma
 spec:
+  storageClassName: local-path  # <-- match PV
   accessModes:
-  - ReadWriteMany
+    - ReadWriteMany
   resources:
     requests:
       storage: 5Gi
