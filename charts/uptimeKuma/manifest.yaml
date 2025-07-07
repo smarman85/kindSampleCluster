@@ -13,14 +13,18 @@ spec:
   - port: 80
     name: http-port
     targetPort: 3001
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
+apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: efs-uptimekuma
-provisioner: kubernetes.io/no-provisioner
-reclaimPolicy: Delete
-volumeBindingMode: WaitForFirstConsumer
+  name: local-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/kuma  # Path inside the kind node container
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -32,7 +36,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: efs-uptimekuma
+  storageClassName: local-pv
 ---
 apiVersion: apps/v1
 kind: Deployment
