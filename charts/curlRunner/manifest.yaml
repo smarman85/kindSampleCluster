@@ -6,39 +6,45 @@ metadata:
 data:
   main.go: |
     package main
-
+    
     import (
-        "encoding/json"
-        "fmt"
-        "net/http"
-        "os"
+    	"encoding/json"
+    	"fmt"
+    	"net/http"
+    	"os"
     )
-
+    
     type Response struct {
-        Msg string `json:"msg"`
+    	Msg string `json:"msg"`
     }
-
+    
     func main() {
-        serviceName := os.Getenv("SERVICE_NAME")
-        if serviceName == "" {
-            serviceName = "default-service"
-        }
-
-        http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-            resp := Response{
-                Msg: fmt.Sprintf("pong from %s", serviceName),
-            }
-            w.Header().Set("Content-Type", "application/json")
-            json.NewEncoder(w).Encode(resp)
-        })
-
-        port := os.Getenv("PORT")
-        if port == "" {
-            port = "8080"
-        }
-
-        fmt.Printf("Server running on port %s\n", port)
-        http.ListenAndServe(":"+port, nil)
+    	serviceName := os.Getenv("SERVICE_NAME")
+    	if serviceName == "" {
+    		serviceName = "service1"
+    	}
+    
+    	port := os.Getenv("PORT")
+    	if port == "" {
+    		port = "8080"
+    	}
+    
+    	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+    		resp := Response{
+    			Msg: fmt.Sprintf("pong from %s", serviceName),
+    		}
+    		w.Header().Set("Content-Type", "application/json")
+    		json.NewEncoder(w).Encode(resp)
+    
+    		// Log to stdout
+    		fmt.Printf("Responded to /ping: %s\n", resp.Msg)
+    	})
+    
+    	fmt.Printf("Server running on port %s for service %s\n", port, serviceName)
+    	err := http.ListenAndServe(":"+port, nil)
+    	if err != nil {
+    		fmt.Printf("Error starting server: %v\n", err)
+    	}
     }
 ---
 apiVersion: v1
