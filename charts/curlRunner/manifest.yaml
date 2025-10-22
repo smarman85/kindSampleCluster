@@ -1,5 +1,47 @@
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ping-app-config
+data:
+  main.go: |
+    package main
+
+    import (
+        "encoding/json"
+        "fmt"
+        "net/http"
+        "os"
+    )
+
+    type Response struct {
+        Msg string `json:"msg"`
+    }
+
+    func main() {
+        serviceName := os.Getenv("SERVICE_NAME")
+        if serviceName == "" {
+            serviceName = "default-service"
+        }
+
+        http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+            resp := Response{
+                Msg: fmt.Sprintf("pong from %s", serviceName),
+            }
+            w.Header().Set("Content-Type", "application/json")
+            json.NewEncoder(w).Encode(resp)
+        })
+
+        port := os.Getenv("PORT")
+        if port == "" {
+            port = "8080"
+        }
+
+        fmt.Printf("Server running on port %s\n", port)
+        http.ListenAndServe(":"+port, nil)
+    }
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: svc1
@@ -50,12 +92,21 @@ spec:
         image: golang:1.20-bullseye
         tty: true
         stdin: true
-        command: ["/bin/bash"]
+        #command: ["/bin/bash"]
+        command: ["go", "run", "/app/main.go"]
         ports:
         - containerPort: 8080
         env:
           - name: SERVICE_NAME
             value: service1
+        volumeMounts:
+          - name: config
+            mountPath: /app/main.go
+            subPath: main.go
+      volumes:
+        - name: config
+          configMap:
+            name: ping-app-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -78,12 +129,21 @@ spec:
         image: golang:1.20-bullseye
         tty: true
         stdin: true
-        command: ["/bin/bash"]
+        # command: ["/bin/bash"]
+        command: ["go", "run", "/app/main.go"]
         ports:
         - containerPort: 8080
         env:
           - name: SERVICE_NAME
             value: service2
+        volumeMounts:
+          - name: config
+            mountPath: /app/main.go
+            subPath: main.go
+      volumes:
+        - name: config
+          configMap:
+            name: ping-app-config
 ---
 apiVersion: apps/v1
 kind: Deployment
