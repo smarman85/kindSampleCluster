@@ -10,6 +10,62 @@ data:
     import (
     	"encoding/json"
     	"fmt"
+    	"log"
+    	"net/http"
+    	"os"
+    )
+    
+    type RequestPayload struct {
+    	Message string `json:"message"`
+    }
+    
+    type ResponsePayload struct {
+    	Service string `json:"service"`
+    	Message string `json:"message"`
+    }
+    
+    func main() {
+    	serviceName := os.Getenv("SERVICE_NAME")
+    	if serviceName == "" {
+    		serviceName = "default-service"
+    	}
+    
+    	port := os.Getenv("PORT")
+    	if port == "" {
+    		port = "8080"
+    	}
+    
+    	http.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+    		var reqPayload RequestPayload
+    		if err := json.NewDecoder(r.Body).Decode(&reqPayload); err != nil {
+    			w.WriteHeader(http.StatusBadRequest)
+    			fmt.Fprintf(w, `{"error": "invalid payload"}`)
+    			return
+    		}
+    
+    		resp := ResponsePayload{
+    			Service: serviceName,
+    			Message: reqPayload.Message,
+    		}
+    
+    		respJSON, _ := json.Marshal(resp)
+    		w.Header().Set("Content-Type", "application/json")
+    		w.Write(respJSON)
+    
+    		// Also log to stdout
+    		log.Printf("Received: %v, Responded: %v\n", reqPayload.Message, string(respJSON))
+    	})
+    
+    	log.Printf("Starting service '%s' on port %s...\n", serviceName, port)
+    	log.Fatal(http.ListenAndServe(":"+port, nil))
+    }
+
+  old-main.go: |
+    package main
+    
+    import (
+    	"encoding/json"
+    	"fmt"
     	"net/http"
     	"os"
     )
