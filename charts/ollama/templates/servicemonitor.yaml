@@ -1,0 +1,19 @@
+---
+# templates/servicemonitor.yaml
+{{- if and .Values.monitoring.enabled .Values.monitoring.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "ollama.fullname" . }}-sm
+  labels:
+    {{- include "ollama.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "ollama.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: http
+      interval: {{ .Values.monitoring.serviceMonitor.interval }}
+  namespaceSelector:
+    any: true
+{{- end }}

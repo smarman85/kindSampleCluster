@@ -1,0 +1,126 @@
+---
+# Source: ollama/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: RELEASE-NAME-ollama
+  labels:
+    helm.sh/chart: ollama-1.1.0
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "0.3.12"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: ollama/templates/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: RELEASE-NAME-ollama-pvc
+  labels:
+    helm.sh/chart: ollama-1.1.0
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "0.3.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: "premium-rwo"
+---
+# Source: ollama/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: RELEASE-NAME-ollama
+  labels:
+    helm.sh/chart: ollama-1.1.0
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "0.3.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 11434
+      targetPort: 11434
+      name: http
+  selector:
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: RELEASE-NAME
+---
+# Source: ollama/templates/deployments.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: RELEASE-NAME-ollama
+  labels:
+    helm.sh/chart: ollama-1.1.0
+    app.kubernetes.io/name: ollama
+    app.kubernetes.io/instance: RELEASE-NAME
+    app.kubernetes.io/version: "0.3.12"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ollama
+      app.kubernetes.io/instance: RELEASE-NAME
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ollama
+        app.kubernetes.io/instance: RELEASE-NAME
+      annotations:
+        null
+    spec:
+      serviceAccountName: RELEASE-NAME-ollama
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        allowPrivilegeEscalation: false
+      containers:
+        - name: ollama
+          image: "ollama/ollama:0.3.12"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 11434
+              protocol: TCP
+          env:
+            - name: OLLAMA_HOME
+              value: /root/.ollama
+          resources:
+            requests:
+              cpu: "4"
+              memory: "16Gi"
+              "nvidia.com/gpu": 1
+            limits:
+              cpu: "4"
+              memory: "16Gi"
+              "nvidia.com/gpu": 1
+          volumeMounts:
+            - name: ollama-data
+              mountPath: /root/.ollama
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 11434
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 11434
+            initialDelaySeconds: 60
+            periodSeconds: 60
+      volumes:
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: RELEASE-NAME-ollama-pvc
+---
+# Source: ollama/templates/servicemonitor.yaml
+# templates/servicemonitor.yaml

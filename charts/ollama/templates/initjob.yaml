@@ -1,0 +1,39 @@
+{{- if .Values.init.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "ollama.fullname" . }}-init
+  labels:
+    {{- include "ollama.labels" . | nindent 4 }}
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ include "ollama.serviceAccountName" . }}
+      restartPolicy: OnFailure
+      containers:
+        - name: init-models
+          image: {{ .Values.init.image | quote }}
+          command: {{ toJson .Values.init.command }}
+          env:
+            - name: OLLAMA_HOST
+              value: localhost:{{ .Values.service.port }}
+          volumeMounts:
+            - name: ollama-data
+              mountPath: /root/.ollama
+          {{- if .Values.init.models }}
+          # simple orchestration: run ollama pull/create commands against local socket
+          args:
+            - |
+              set -e
+              # wait for the service to be ready
+              until nc -z localhost {{ .Values.service.port }}; do sleep 1; done
+              {{- range .Values.init.models }}
+              echo "Processing model: {{ . }}"
+              /bin/ollama pull {{ . }} || true
+              {{- end }}
+          {{- end }}
+      volumes:
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: {{ include "ollama.fullname" . }}-pvc
+{{- end }}

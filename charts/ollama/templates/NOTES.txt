@@ -1,0 +1,8 @@
+Thank you for installing Ollama.
+
+To check status:
+  kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+
+To port-forward (local testing):
+  kubectl port-forward svc/{{ include "ollama.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+

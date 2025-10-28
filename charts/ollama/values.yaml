@@ -1,0 +1,56 @@
+replicaCount: 1
+
+image:
+  repository: ollama/ollama
+  tag: "0.3.12"
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: "4"
+    memory: "16Gi"
+    gpu: 1
+  limits:
+    cpu: "4"
+    memory: "16Gi"
+    gpu: 1
+
+persistence:
+  enabled: true
+  size: 50Gi
+  storageClass: "premium-rwo"
+
+service:
+  type: ClusterIP
+  port: 11434
+
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {} # e.g. {"iam.gke.io/gcp-service-account": "sa@proj.iam.gserviceaccount.com"}
+
+namespaceOverride: ""
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+monitoring:
+  enabled: false
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    labels: {}
+
+init:
+  enabled: false         # if true, run a one-shot Job to pre-pull or create models
+  image: "alpine:3.18"
+  command: ["/bin/sh", "-c"]
+  # models to pull or create via Ollama CLI; example format: ["gpt-4o-mini", "custom:model:1.0"]
+  models: []
+
+extraVolumeMounts: []
+extraVolumes: []
