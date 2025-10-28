@@ -12,5 +12,7 @@ spec:
       storage: {{ .Values.persistence.size }}
   {{- if .Values.persistence.storageClass }}
   storageClassName: {{ .Values.persistence.storageClass | quote }}
+  {{- else }}
+  storageClassName: local-path
   {{- end }}
 {{- end }}

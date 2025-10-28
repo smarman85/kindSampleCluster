@@ -18,7 +18,7 @@ resources:
 persistence:
   enabled: true
   size: 50Gi
-  storageClass: "premium-rwo"
+  #storageClass: "premium-rwo"
 
 service:
   type: ClusterIP
