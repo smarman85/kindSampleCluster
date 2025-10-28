@@ -269,3 +269,9 @@ eso-install:
 eso-demo:
 	kubectl apply -f charts/crds/eso-app.yaml -n argocd
 
+ollama:
+	kubectl apply -f charts/crds/local-path.yaml -n argocd
+	kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
+	kubectl apply -f charts/crds/ollama.yaml -n argocd
+
