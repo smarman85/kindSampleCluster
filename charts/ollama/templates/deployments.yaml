@@ -16,8 +16,6 @@ spec:
       annotations:
         {{- toYaml .Values.podAnnotations | nindent 8 }}
     spec:
-      nodeSelector:
-        cloud.google.com/compute-class: "gpu-accelerated"
       serviceAccountName: {{ include "ollama.serviceAccountName" . }}
       securityContext:
         runAsNonRoot: true
