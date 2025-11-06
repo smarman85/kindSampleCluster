@@ -178,27 +178,21 @@ spec:
                           - name: fileName
                             value: "{{inputs.parameters.fileName}}"
                 - name: call
-                  #inputs:
-                  #  parameters:
-                  #  - name: sha
-                  #  - name: repo
-                  #  artifacts:
-                  #  - name: code
-                  #    path: /go/src/github.com/golang/example
-                  #    git:
-                  #      repo: "{{inputs.parameters.repo}}"
-                  #      revision: "{{inputs.parameters.sha}}"
+                  inputs:
+                    parameters:
+                    - name: sha
+                    - name: repo
                   container:
                     image: golang:1.8
                     command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
                     args: 
                     env:
                       - name: API_URL
-                        value: "{{workflow.parameters.api_url}}"
+                        value: "{{inputs.parameters.api_url}}"
                       - name: BITBUCKET_PR
-                        value: "{{workflow.parameters.pr_number}}"
+                        value: "{{inputs.parameters.pr_number}}"
                       - name: API_PAYLOAD
-                        value: "{{workflow.parameters.payload}}"
+                        value: "{{inputs.parameters.payload}}"
                     volumeMounts:
                     - name: workdir
                       mountPath: /go/src/github.com/golang
