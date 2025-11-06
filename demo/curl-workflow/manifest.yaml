@@ -180,8 +180,9 @@ spec:
                 - name: call
                   inputs:
                     parameters:
-                    - name: sha
-                    - name: repo
+                    - name: api_url
+                    - name: pr_number
+                    - name: payload
                   container:
                     image: golang:1.8
                     command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
