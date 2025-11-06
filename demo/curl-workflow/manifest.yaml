@@ -92,126 +92,126 @@ metadata:
   annotations:
     kubernetes.io/enforce-mountable-secrets: "true"
   name: workflow-cache-sa
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Sensor
-# metadata:
-#   name: workflow-cache-sensor
-# spec:
-#   template:
-#     serviceAccountName: workflow-cache-sa
-#   dependencies:
-#     - name: api-call-deps
-#       eventSourceName: workflow-cache-es
-#       eventName: api-call
-#   triggers:
-#     - template:
-#       conditions: api-call
-#         name: api-trigger
-#         k8s:
-#           operation: create
-#           source:
-#             resource:
-#               apiVersion: argoproj.io/v1alpha1
-#               kind: Workflow
-#               metadata:
-#                 generateName: api-workflow-
-#               spec:
-#                 serviceAccountName: workflow-cache-sa
-#                 automountServiceAccountToken: true
-#                 arguments:
-#                   parameters:
-#                   - name: repo
-#                     value: "test-repo-name"
-#                   - name: sha
-#                     value: "test-repo-sha"
-#                   - name: fileName
-#                     value: "test.yaml"
-#                 entrypoint: api-call
-#                 volumes:
-#                 - name: workflow-cache-pvc
-#                   persistentVolumeClaim:
-#                     claimName: workflow-cache-pvc
-#                 volumeClaimTemplates:
-#                 # - metadata:
-#                 #     name: workflow-cache-pvc
-#                 #   spec:
-#                 #     accessModes: ["ReadWriteOnce"]
-#                 #     resources:
-#                 #       requests:
-#                 #         storage: 1Gi
-#                 - metadata:
-#                     name: workdir
-#                   spec:
-#                     accessModes: ["ReadWriteOnce"]
-#                     resources:
-#                       requests:
-#                         storage: 1Gi
-#                 - metadata:
-#                     name: binary
-#                   spec:
-#                     accessModes: ["ReadWriteOnce"]
-#                     resources:
-#                       requests:
-#                         storage: 1Gi
-#                 templates:
-#                 - name: api-call
-#                   inputs:
-#                     parameters:
-#                     - name: repo
-#                       value: "{{inputs.parameters.repo}}"
-#                     - name: sha
-#                       value: "{{inputs.parameters.sha}}"
-#                     - name: fileName
-#                       value: "{{inputs.parameters.fileName}}"
-#                   steps:
-#                   - - name: api
-#                       template: call
-#                       arguments:
-#                         parameters:
-#                           - name: repo
-#                             value: "{{inputs.parameters.repo}}"
-#                           - name: sha
-#                             value: "{{inputs.parameters.sha}}"
-#                           - name: fileName
-#                             value: "{{inputs.parameters.fileName}}"
-#                 - name: call
-#                   #inputs:
-#                   #  parameters:
-#                   #  - name: sha
-#                   #  - name: repo
-#                   #  artifacts:
-#                   #  - name: code
-#                   #    path: /go/src/github.com/golang/example
-#                   #    git:
-#                   #      repo: "{{inputs.parameters.repo}}"
-#                   #      revision: "{{inputs.parameters.sha}}"
-#                   container:
-#                     image: golang:1.8
-#                     command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
-#                     args: 
-#                     env:
-#                       - name: API_URL
-#                         value: "{{workflow.parameters.api_url}}"
-#                       - name: BITBUCKET_PR
-#                         value: "{{workflow.parameters.pr_number}}"
-#                       - name: API_PAYLOAD
-#                         value: "{{workflow.parameters.payload}}"
-#                     volumeMounts:
-#                     - name: workdir
-#                       mountPath: /go/src/github.com/golang
-#                     - name: workflow-cache-pvc
-#                       mountPath: /mnt/cache
-#           parameters:
-#             - src:
-#                 dependencyName: api-call-deps
-#                 dataKey: body.api_url
-#               dest: spec.arguments.parameters.0.value
-#             - src:
-#                 dependencyName: api-call-deps
-#                 dataKey: body.pr_number
-#               dest: spec.arguments.parameters.1.value
-#             - src:
-#                 dependencyName: api-call-deps
-#                 dataKey: body.payload
-#               dest: spec.arguments.parameters.2.value
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: workflow-cache-sensor
+spec:
+  template:
+    serviceAccountName: workflow-cache-sa
+  dependencies:
+    - name: api-call-deps
+      eventSourceName: workflow-cache-es
+      eventName: api-call
+  triggers:
+    - template:
+        conditions: api-call
+        name: api-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: api-workflow-
+              spec:
+                serviceAccountName: workflow-cache-sa
+                automountServiceAccountToken: true
+                arguments:
+                  parameters:
+                  - name: repo
+                    value: "test-repo-name"
+                  - name: sha
+                    value: "test-repo-sha"
+                  - name: fileName
+                    value: "test.yaml"
+                entrypoint: api-call
+                volumes:
+                - name: workflow-cache-pvc
+                  persistentVolumeClaim:
+                    claimName: workflow-cache-pvc
+                volumeClaimTemplates:
+                # - metadata:
+                #     name: workflow-cache-pvc
+                #   spec:
+                #     accessModes: ["ReadWriteOnce"]
+                #     resources:
+                #       requests:
+                #         storage: 1Gi
+                - metadata:
+                    name: workdir
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
+                - metadata:
+                    name: binary
+                  spec:
+                    accessModes: ["ReadWriteOnce"]
+                    resources:
+                      requests:
+                        storage: 1Gi
+                templates:
+                - name: api-call
+                  inputs:
+                    parameters:
+                    - name: repo
+                      value: "{{inputs.parameters.repo}}"
+                    - name: sha
+                      value: "{{inputs.parameters.sha}}"
+                    - name: fileName
+                      value: "{{inputs.parameters.fileName}}"
+                  steps:
+                  - - name: api
+                      template: call
+                      arguments:
+                        parameters:
+                          - name: repo
+                            value: "{{inputs.parameters.repo}}"
+                          - name: sha
+                            value: "{{inputs.parameters.sha}}"
+                          - name: fileName
+                            value: "{{inputs.parameters.fileName}}"
+                - name: call
+                  #inputs:
+                  #  parameters:
+                  #  - name: sha
+                  #  - name: repo
+                  #  artifacts:
+                  #  - name: code
+                  #    path: /go/src/github.com/golang/example
+                  #    git:
+                  #      repo: "{{inputs.parameters.repo}}"
+                  #      revision: "{{inputs.parameters.sha}}"
+                  container:
+                    image: golang:1.8
+                    command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
+                    args: 
+                    env:
+                      - name: API_URL
+                        value: "{{workflow.parameters.api_url}}"
+                      - name: BITBUCKET_PR
+                        value: "{{workflow.parameters.pr_number}}"
+                      - name: API_PAYLOAD
+                        value: "{{workflow.parameters.payload}}"
+                    volumeMounts:
+                    - name: workdir
+                      mountPath: /go/src/github.com/golang
+                    - name: workflow-cache-pvc
+                      mountPath: /mnt/cache
+          parameters:
+            - src:
+                dependencyName: api-call-deps
+                dataKey: body.api_url
+              dest: spec.arguments.parameters.0.value
+            - src:
+                dependencyName: api-call-deps
+                dataKey: body.pr_number
+              dest: spec.arguments.parameters.1.value
+            - src:
+                dependencyName: api-call-deps
+                dataKey: body.payload
+              dest: spec.arguments.parameters.2.value
