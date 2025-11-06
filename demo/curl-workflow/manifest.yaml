@@ -106,7 +106,7 @@ spec:
       eventName: api-call
   triggers:
     - template:
-        conditions: api-call
+        conditions: api-call-deps
         name: api-trigger
         k8s:
           operation: create

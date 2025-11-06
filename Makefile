@@ -275,3 +275,7 @@ ollama:
 
 	kubectl apply -f charts/crds/ollama.yaml -n argocd
 
+curl-runner: 
+	kubectl apply -f charts/crds/curl-runner.yaml -n argocd
+	kubectl apply -f charts/crds/curl-workflow.yaml -n argocd
+	kubectl -n curl-workflow port-forward $(WEBHOOK_POD) 12000:12000 &
