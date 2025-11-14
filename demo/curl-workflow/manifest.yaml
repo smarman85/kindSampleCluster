@@ -140,12 +140,12 @@ spec:
                 automountServiceAccountToken: true
                 arguments:
                   parameters:
-                  - name: repo
-                    value: "test-repo-name"
-                  - name: sha
-                    value: "test-repo-sha"
-                  - name: fileName
-                    value: "test.yaml"
+                  - name: api_url
+                    value: default
+                  - name: pr_number
+                    value: default
+                  - name: payload
+                    value: default
                 entrypoint: api-call
                 volumes:
                 - name: workflow-cache-pvc
