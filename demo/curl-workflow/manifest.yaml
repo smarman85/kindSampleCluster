@@ -42,10 +42,9 @@ kind: EventSource
 metadata:
   name: workflow-cache-es
 spec:
-  service:
-    ports:
-      - port: 12000
-        targetPort: 12000
+  ports:
+    - port: 12000
+      targetPort: 12000
   webhook:
     api-call:
       port: "12000"
