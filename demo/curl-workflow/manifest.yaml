@@ -178,8 +178,11 @@ spec:
                   inputs:
                     parameters:
                     - name: api_url
+                      value: "{{workflow.parameters.api_url}}"
                     - name: pr_number
+                      value: "{{workflow.parameters.pr_number}}"
                     - name: payload
+                      value: "{{workflow.parameters.payload}}"
                   steps:
                   - - name: api
                       template: call
