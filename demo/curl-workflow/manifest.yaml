@@ -43,16 +43,16 @@ metadata:
   name: workflow-cache-es
 spec:
   # Only needed to auto build services
-  # service: 
-  #   ports:
-  #     - port: 12000
-  #       targetPort: 12000
+  service: 
+    ports:
+      - port: 12000
+        targetPort: 12000
   webhook:
     api-call:
       port: "12000"
       endpoint: /api-call
       method: POST
-      #jsonBody: true
+      jsonBody: true
 ---
 apiVersion: v1
 kind: Service
@@ -177,23 +177,20 @@ spec:
                 - name: api-call
                   inputs:
                     parameters:
-                    - name: repo
-                      value: "{{inputs.parameters.repo}}"
-                    - name: sha
-                      value: "{{inputs.parameters.sha}}"
-                    - name: fileName
-                      value: "{{inputs.parameters.fileName}}"
+                    - name: api_url
+                    - name: pr_number
+                    - name: payload
                   steps:
                   - - name: api
                       template: call
                       arguments:
                         parameters:
-                          - name: repo
-                            value: "{{inputs.parameters.repo}}"
-                          - name: sha
-                            value: "{{inputs.parameters.sha}}"
-                          - name: fileName
-                            value: "{{inputs.parameters.fileName}}"
+                          - name: url
+                            value: "{{inputs.parameters.api_url}}"
+                          - name: pr
+                            value: "{{inputs.parameters.pr_number}}"
+                          - name: data
+                            value: "{{inputs.parameters.payload}}"
                 - name: call
                   inputs:
                     parameters:
