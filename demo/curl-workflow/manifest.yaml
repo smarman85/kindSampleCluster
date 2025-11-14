@@ -42,12 +42,16 @@ kind: EventSource
 metadata:
   name: workflow-cache-es
 spec:
+  service:
+    ports:
+      - port: 12000
+        targetPort: 12000
   webhook:
     api-call:
       port: "12000"
       endpoint: /api-call
       method: POST
-      jsonBody: true
+      #jsonBody: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
