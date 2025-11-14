@@ -187,7 +187,8 @@ spec:
                       requests:
                         storage: 1Gi
                 templates:
-                - container:
+                - name: api-call
+                  container:
                   inputs:
                     parameters:
                     - name: api_url
@@ -196,7 +197,6 @@ spec:
                       value: default
                     - name: payload
                       value: default
-                  name: api-call
                   image: golang:1.8
                   command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
                   args:
