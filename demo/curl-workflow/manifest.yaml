@@ -42,15 +42,30 @@ kind: EventSource
 metadata:
   name: workflow-cache-es
 spec:
-  ports:
-    - port: 12000
-      targetPort: 12000
+  # Only needed to auto build services
+  # service: 
+  #   ports:
+  #     - port: 12000
+  #       targetPort: 12000
   webhook:
     api-call:
       port: "12000"
       endpoint: /api-call
       method: POST
-      jsonBody: true
+      #jsonBody: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-call-svc
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 12000
+  selector:
+    eventsource-name: workflow-cache-es
+    controller: eventsource-controller
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
