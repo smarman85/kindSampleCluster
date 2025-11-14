@@ -216,13 +216,15 @@ spec:
           parameters:
             - src:
                 dependencyName: api-call-deps
-                dataKey: body.api_url
+                # use only when jsonBody isn't true in the event source
+                #dataKey: body.api_url
+                dataKey: api_url
               dest: spec.arguments.parameters.0.value
             - src:
                 dependencyName: api-call-deps
-                dataKey: body.pr_number
+                dataKey: pr_number
               dest: spec.arguments.parameters.1.value
             - src:
                 dependencyName: api-call-deps
-                dataKey: body.payload
+                dataKey: payload
               dest: spec.arguments.parameters.2.value
