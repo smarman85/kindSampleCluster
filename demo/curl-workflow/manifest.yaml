@@ -188,7 +188,6 @@ spec:
                         storage: 1Gi
                 templates:
                 - name: api-call
-                  container:
                   inputs:
                     parameters:
                     - name: api_url
@@ -197,21 +196,22 @@ spec:
                       value: default
                     - name: payload
                       value: default
-                  image: golang:1.8
-                  command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
-                  args:
-                    - '{{inputs.parameters.api_url}}'
-                    - '{{inputs.parameters.pr_number}}'
-                    - '{{inputs.parameters.payload}}'
-                  env:
-                    - name: API_URL
-                      value: "{{inputs.parameters.api_url}}"
-                    - name: BITBUCKET_PR
-                      value: "{{inputs.parameters.pr_number}}"
-                    - name: API_PAYLOAD
-                      value: "{{inputs.parameters.payload}}"
-                  volumeMounts:
-                  - name: workdir
-                    mountPath: /go/src/github.com/golang
-                  - name: workflow-cache-pvc
-                    mountPath: /mnt/cache
+                  container:
+                    image: golang:1.8
+                    command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
+                    args:
+                      - '{{inputs.parameters.api_url}}'
+                      - '{{inputs.parameters.pr_number}}'
+                      - '{{inputs.parameters.payload}}'
+                    env:
+                      - name: API_URL
+                        value: "{{inputs.parameters.api_url}}"
+                      - name: BITBUCKET_PR
+                        value: "{{inputs.parameters.pr_number}}"
+                      - name: API_PAYLOAD
+                        value: "{{inputs.parameters.payload}}"
+                    volumeMounts:
+                    - name: workdir
+                      mountPath: /go/src/github.com/golang
+                    - name: workflow-cache-pvc
+                      mountPath: /mnt/cache
