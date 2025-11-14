@@ -47,8 +47,7 @@ spec:
       port: "12000"
       endpoint: /api-call
       method: POST
-      payload:
-        jsonBody: true
+      #jsonBody: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
