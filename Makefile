@@ -278,4 +278,7 @@ ollama:
 curl-runner: 
 	kubectl apply -f charts/crds/curl-runner.yaml -n argocd
 	kubectl apply -f charts/crds/curl-workflow.yaml -n argocd
-	kubectl -n curl-workflow port-forward $(WEBHOOK_POD) 12000:12000 &
+	kubectl port-forward svc/workflow-cache-es-eventsource-svc -n curl-workflow 12000:80 &
+
+curl-runner-test:
+	curl -X POST http://0.0.0.0:12000/api-call -H "Content-Type: application/json" -d '{"api_url": "localhost","pr_number": "testing-123","payload": "hi"}'
