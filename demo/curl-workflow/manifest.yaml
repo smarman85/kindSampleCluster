@@ -45,7 +45,7 @@ spec:
   # Only needed to auto build services
   service: 
     ports:
-      - port: 12000
+      - port: 80
         targetPort: 12000
   webhook:
     api-call:
