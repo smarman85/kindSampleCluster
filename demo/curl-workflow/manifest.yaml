@@ -199,17 +199,17 @@ spec:
                   container:
                     image: golang:1.25.4-bookworm
                     command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
-                    args:
-                      - '{{inputs.parameters.api_url}}'
-                      - '{{inputs.parameters.pr_number}}'
-                      - '{{inputs.parameters.payload}}'
+                    args: []
+                      # - '{{inputs.parameters.api_url}}'
+                      # - '{{inputs.parameters.pr_number}}'
+                      # - '{{inputs.parameters.payload}}'
                     env:
                       - name: API_URL
-                        value: '{{workflow.parameters.api_url}}'
+                        value: '{{inputs.parameters.api_url}}'
                       - name: BITBUCKET_PR
-                        value: '{{workflow.parameters.pr_number}}'
+                        value: '{{inputs.parameters.pr_number}}'
                       - name: API_PAYLOAD
-                        value: '{{workflow.parameters.payload}}'
+                        value: '{{inputs.parameters.payload}}'
                     volumeMounts:
                     - name: workdir
                       mountPath: /go/src/github.com/golang
