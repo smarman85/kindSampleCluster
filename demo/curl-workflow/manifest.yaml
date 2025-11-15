@@ -198,11 +198,13 @@ spec:
                       value: default
                   container:
                     image: golang:1.25.4-bookworm
-                    command: ["/usr/bin/echo", "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"]
-                    args: []
-                      # - '{{inputs.parameters.api_url}}'
-                      # - '{{inputs.parameters.pr_number}}'
-                      # - '{{inputs.parameters.payload}}'
+                    command: ["/bin/bash", "-c"]
+                    args: 
+                      - echo "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"
+                    # args: []
+                    #   - '{{inputs.parameters.api_url}}'
+                    #   - '{{inputs.parameters.pr_number}}'
+                    #   - '{{inputs.parameters.payload}}'
                     env:
                       - name: API_URL
                         value: '{{inputs.parameters.api_url}}'
