@@ -205,11 +205,11 @@ spec:
                       - '{{inputs.parameters.payload}}'
                     env:
                       - name: API_URL
-                        value: "{{workflow.parameters.api_url}}"
+                        value: '{{workflow.parameters.api_url}}'
                       - name: BITBUCKET_PR
-                        value: "{{workflow.parameters.pr_number}}"
+                        value: '{{workflow.parameters.pr_number}}'
                       - name: API_PAYLOAD
-                        value: "{{workflow.parameters.payload}}"
+                        value: '{{workflow.parameters.payload}}'
                     volumeMounts:
                     - name: workdir
                       mountPath: /go/src/github.com/golang
