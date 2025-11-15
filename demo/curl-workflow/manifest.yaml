@@ -200,7 +200,8 @@ spec:
                     image: golang:1.25.4-bookworm
                     command: ["/bin/bash", "-c"]
                     args: 
-                      - echo "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"
+                      - echo 
+                      - "api url: $API_URL\tpr number: $BITBUCKET_PR\tpayload: $API_PAYLOAD"
                     # args: []
                     #   - '{{inputs.parameters.api_url}}'
                     #   - '{{inputs.parameters.pr_number}}'
