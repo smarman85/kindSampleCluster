@@ -221,9 +221,11 @@ spec:
                     # image: golang:1.25.4-bookworm
                     # local cached image - podman 
                     image: localhost/jq-image:v1
-                    command: ["/bin/bash", "-c"]
+                    command: ["/tmp/echo"]
                     args:
-                      - /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"
+                      - '{{inputs.parameters.api_url}}' 
+                      - '{{inputs.parameters.pr_number}}' 
+                      - '{{inputs.parameters.payload | quote}}'
                     env:
                       - name: API_URL
                         value: '{{inputs.parameters.api_url}}'
