@@ -112,6 +112,19 @@ metadata:
     kubernetes.io/enforce-mountable-secrets: "true"
   name: workflow-cache-sa
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apicall-cm
+data:
+  echo-script: |
+    #!/bin/bash
+    API_URL=$1
+    BITBUCKET_PR=$2
+    API_PAYLOAD=$3
+
+    echo "api url: $API_URL    pr number: $BITBUCKET_PR    payload: $API_PAYLOAD"
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
@@ -164,6 +177,12 @@ spec:
                 - name: workflow-cache-pvc
                   persistentVolumeClaim:
                     claimName: workflow-cache-pvc
+                - name: workflow-script
+                  configMap:
+                    name: apicall-cm
+                    items:
+                    - key: echo-script
+                      path: echo-script
                 volumeClaimTemplates:
                 # - metadata:
                 #     name: workflow-cache-pvc
@@ -198,12 +217,11 @@ spec:
                       value: default
                   container:
                     image: golang:1.25.4-bookworm
-                    command: ["/usr/bin/echo", "api url: $API_URL    pr number: $BITBUCKET_PR    payload: $API_PAYLOAD"]
-                    args: [] 
-                      # - echo "api url: $API_URL    pr number: $BITBUCKET_PR    payload: $API_PAYLOAD"
-                      # - '{{inputs.parameters.api_url}}'
-                      # - '{{inputs.parameters.pr_number}}'
-                      # - '{{inputs.parameters.payload}}'
+                    command: ["/bin/bash", "-c"]
+                    args:
+                      - |
+                        chmod +x /tmp/echo && \
+                        /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"
                     env:
                       - name: API_URL
                         value: '{{inputs.parameters.api_url}}'
@@ -216,3 +234,6 @@ spec:
                       mountPath: /go/src/github.com/golang
                     - name: workflow-cache-pvc
                       mountPath: /mnt/cache
+                    - name: workflow-script
+                      mountPath: /tmp/echo
+                      subPath: echo-script
