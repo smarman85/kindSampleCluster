@@ -218,7 +218,9 @@ spec:
                     - name: payload
                       value: default
                   container:
-                    image: golang:1.25.4-bookworm
+                    # image: golang:1.25.4-bookworm
+                    # local cached image - podman 
+                    image: localhost/jq-image:latest
                     command: ["/bin/bash", "-c"]
                     args:
                       - /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"
