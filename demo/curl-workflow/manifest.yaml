@@ -220,7 +220,7 @@ spec:
                   container:
                     # image: golang:1.25.4-bookworm
                     # local cached image - podman 
-                    image: localhost/jq-image:latest
+                    image: localhost/jq-image:v1
                     command: ["/bin/bash", "-c"]
                     args:
                       - /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"

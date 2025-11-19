@@ -176,8 +176,8 @@ enabling experimental podman provider
 lab
 
 # save image and pipe it into your cluster:
-podman save localhost/statusreport:latest -o statusreport:tar && \
-  kind load image-archive statusreport.tar --name lab
+podman save localhost/jq-image:v1 -o jq-imagev1.tar && \
+  kind load image-archive jq-imagev1.tar --name lab
 ```
 
 ---
