@@ -223,9 +223,9 @@ spec:
                     image: localhost/jq-image:v1
                     command: ["/tmp/echo"]
                     args:
-                      - '{{inputs.parameters.api_url}}' 
-                      - '{{inputs.parameters.pr_number}}' 
-                      - '{{inputs.parameters.payload | quote}}'
+                      - "{{inputs.parameters.api_url}}" 
+                      - "{{inputs.parameters.pr_number}}"
+                      - '{{inputs.parameters.payload}}'
                     env:
                       - name: API_URL
                         value: '{{inputs.parameters.api_url}}'
