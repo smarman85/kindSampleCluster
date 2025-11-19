@@ -281,4 +281,5 @@ curl-runner:
 	kubectl port-forward svc/workflow-cache-es-eventsource-svc -n curl-workflow 12000:80 &
 
 curl-runner-test:
-	curl -X POST http://0.0.0.0:12000/api-call -H "Content-Type: application/json" -d '{"api_url": "localhost","pr_number": "testing-123","payload": "hi"}'
+	curl -X POST http://0.0.0.0:12000/api-call -H "Content-Type: application/json" -d '{"api_url": "localhost","pr_number": "testing-1234","payload": {"message": "hello_there","recipient": "you_there"}}'
+	# curl -X POST http://0.0.0.0:12000/api-call -H "Content-Type: application/json" -d '{"api_url": "localhost","pr_number": "testing-123","payload": "hi"}'
