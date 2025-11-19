@@ -121,7 +121,7 @@ data:
     #!/bin/bash
     API_URL=$1
     BITBUCKET_PR=$2
-    API_PAYLOAD_RAW=$3
+    API_PAYLOAD_RAW="$3"
     API_PAYLOAD=$(echo "$API_PAYLOAD_RAW" | jq .)
 
     echo "api url: $API_URL    pr number: $BITBUCKET_PR    payload: $API_PAYLOAD"
