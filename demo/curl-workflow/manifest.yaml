@@ -180,6 +180,7 @@ spec:
                 - name: workflow-script
                   configMap:
                     name: apicall-cm
+                    defaultMode: 0755
                     items:
                     - key: echo-script
                       path: echo-script
@@ -219,9 +220,7 @@ spec:
                     image: golang:1.25.4-bookworm
                     command: ["/bin/bash", "-c"]
                     args:
-                      - |
-                        chmod +x /tmp/echo && \
-                        /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"
+                      - /tmp/echo "{{inputs.parameters.api_url}}" "{{inputs.parameters.pr_number}}" "{{inputs.parameters.payload}}"
                     env:
                       - name: API_URL
                         value: '{{inputs.parameters.api_url}}'
