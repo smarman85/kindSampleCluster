@@ -125,6 +125,18 @@ data:
     API_PAYLOAD=$(echo "$API_PAYLOAD_RAW" | jq .)
 
     echo "api url: $API_URL    pr number: $BITBUCKET_PR    payload: $API_PAYLOAD"
+    
+    # ---- NEW: Run curl and store the response ----
+    # Send the payload as JSON in the request body
+    CURL_RESPONSE=$(
+      curl -s -X POST \
+        -H "Content-Type: application/json" \
+        -d "$API_PAYLOAD_RAW" \
+        "$API_URL"
+    )
+    
+    # ---- NEW: Print the response ----
+    echo "curl response: $CURL_RESPONSE"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
