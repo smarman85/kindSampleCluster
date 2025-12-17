@@ -16884,8 +16884,10 @@ spec:
           successThreshold: 1
           timeoutSeconds: 4
         resources:
+          requests:
+            ephemeral-storage: "500Mi"
           limits:
-            ephemeral-storage: 1Gi
+            ephemeral-storage: "500Mi"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
