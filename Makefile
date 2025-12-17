@@ -282,3 +282,9 @@ curl-runner:
 
 curl-runner-test:
 	curl -X POST http://0.0.0.0:12000/api-call -H "Content-Type: application/json" -d '{"api_url": "localhost","pr_number": "testing-1234","payload": {"message": "hello_there","recipient": "you_there"}}'
+
+# argo rollouts blue-green
+rollout-infra:
+	kubectl create ns argo-rollouts
+	kubectl apply -f argocd charts/crds/argo-rollouts.yaml 
+	
