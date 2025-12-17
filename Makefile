@@ -286,5 +286,5 @@ curl-runner-test:
 # argo rollouts blue-green
 rollout-infra:
 	kubectl create ns argo-rollouts
-	kubectl apply -f argocd charts/crds/argo-rollouts.yaml 
+	kubectl apply -f charts/crds/argo-rollouts.yaml -n argocd
 	
