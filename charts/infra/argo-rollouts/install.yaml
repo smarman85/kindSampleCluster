@@ -16884,6 +16884,9 @@ spec:
           successThreshold: 1
           timeoutSeconds: 4
         resources:
+          # Don't use in KinD
+          # limits:
+          #   ephemeral-storage: "500Mi"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
