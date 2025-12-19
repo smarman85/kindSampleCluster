@@ -295,8 +295,8 @@ rollout-blue-green:
 rollout-deploy-yellow:
 	kubectl argo rollouts set image rollout-bluegreen rollouts-demo=argoproj/rollouts-demo:yellow -n blue-green
 
-rollout-svcs-blue:
+rollout-svcs-active:
 	kubectl port-forward svc/rollout-bluegreen-active -n blue-green 13001:80 &
 
-rollout-svcs-yellow:
+rollout-svcs-preview:
 	kubectl port-forward svc/rollout-bluegreen-preview -n blue-green 13002:80 &
