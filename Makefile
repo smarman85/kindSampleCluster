@@ -304,5 +304,9 @@ rollout-svcs-active:
 rollout-svcs-preview:
 	kubectl port-forward svc/rollout-bluegreen-preview -n blue-green 13002:80 &
 
+rollouts-open-windows:
+	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:13001"
+	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:13002"
+
 rollout-promote:
 	kubectl argo rollouts promote rollout-bluegreen -n blue-green
