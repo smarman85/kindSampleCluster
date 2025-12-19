@@ -292,6 +292,9 @@ rollout-infra:
 rollout-blue-green:
 	kubectl apply -f charts/crds/rollouts-blue-green.yaml
 
+rollouts-watch:
+	kubectl argo rollouts get rollout rollout-bluegreen -n blue-green --watch
+
 rollout-deploy-yellow:
 	kubectl argo rollouts set image rollout-bluegreen rollouts-demo=argoproj/rollouts-demo:yellow -n blue-green
 
