@@ -16,8 +16,9 @@ spec:
     spec:
       containers:
       - name: rollouts-demo
-        # image: argoproj/rollouts-demo:blue
-        image: argoproj/rollouts-demo:green
+        image: argoproj/rollouts-demo:blue
+        # image: argoproj/rollouts-demo:green
+        # image: argoproj/rollouts-demo:yellow
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -34,7 +35,7 @@ spec:
       # immediately before the promotion. If omitted, the default behavior is to promote the new
       # stack as soon as the ReplicaSet are completely ready/available.
       # Rollouts can be resumed using: `kubectl argo rollouts promote ROLLOUT`
-      autoPromotionSeconds: 300
+      autoPromotionSeconds: 120
       autoPromotionEnabled: true
 ---
 kind: Service
