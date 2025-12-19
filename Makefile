@@ -300,3 +300,6 @@ rollout-svcs-active:
 
 rollout-svcs-preview:
 	kubectl port-forward svc/rollout-bluegreen-preview -n blue-green 13002:80 &
+
+rollout-promote:
+	kubectl argo rollouts promote rollout-bluegreen -n blue-green
