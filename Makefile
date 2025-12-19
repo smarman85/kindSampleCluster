@@ -291,3 +291,12 @@ rollout-infra:
 	
 rollout-blue-green:
 	kubectl apply -f charts/crds/rollouts-blue-green.yaml
+
+rollout-deploy-yellow:
+	kubectl argo rollouts set image rollout-bluegreen rollouts-demo=argoproj/rollouts-demo:yellow -n blue-green
+
+rollout-svcs-blue:
+	kubectl port-forward svc/rollout-bluegreen-active -n blue-green 13001:80 &
+
+rollout-svcs-yellow:
+	kubectl port-forward svc/rollout-bluegreen-preview -n blue-green 13002:80 &
