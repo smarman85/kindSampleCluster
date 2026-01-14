@@ -308,5 +308,9 @@ rollouts-open-windows:
 	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:13001"
 	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:13002"
 
+rollouts-dashboard:
+	kubectl argo rollouts dashboard -n blue-green
+	open /Applications/Google\ Chrome.app/ "http://localhost:3100/rollouts"
+
 rollout-promote:
 	kubectl argo rollouts promote rollout-bluegreen -n blue-green
