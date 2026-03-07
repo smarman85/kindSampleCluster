@@ -314,3 +314,7 @@ rollouts-dashboard:
 
 rollout-promote:
 	kubectl argo rollouts promote rollout-bluegreen -n blue-green
+
+# github self hosted runner
+arc-intsall:
+	kubectl apply -f charts/crds/github-runner.yaml -n argocd
