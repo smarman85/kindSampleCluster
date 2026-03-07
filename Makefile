@@ -317,4 +317,4 @@ rollout-promote:
 
 # github self hosted runner
 arc-intsall:
-	kubectl apply -f charts/crds/github-runner.yaml -n argocd
+	kubectl apply -f charts/crds/gh-actions-runner.yaml -n argocd
