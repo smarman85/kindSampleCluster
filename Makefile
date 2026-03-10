@@ -317,4 +317,5 @@ rollout-promote:
 
 # github self hosted runner
 arc-intsall:
-	kubectl apply -f charts/crds/gh-actions-runner.yaml -n argocd
+	kubectl apply -f charts/crds/gh-runner-scale-set-controller.yaml -n argocd
+	kubectl apply -f charts/crds/gh-runner-scale-set.yaml -n argocd
