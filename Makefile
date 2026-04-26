@@ -1,12 +1,15 @@
+## Notes on variables an how they load
+## := is eager loading and vars get interpreted on each make call
+## = is lazy loading and only get called when used by a make subcommand
 DATE := $(shell date +%FT%T%Z)
+CLUSTER_NAME := lab
 # argocd admin password set to: admin
 # below is the escaped version of the password coming from: htpasswd -bnBC 10 "" admin | tr -d ':\n' | sed 's/$2y/$2a/'
-ADMIN_PASSWORD := $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOgK # admin
-WEBHOOK_POD := $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
-WEBHOOK_MULTI := $(shell kubectl -n argo-events get pod -l eventsource-name=test-api-eventsource -o name)
-CI_POD := $(shell kubectl -n ci get pod -l eventsource-name=webhook-deps-es -o name)
-CI_POD_CACHE := $(shell kubectl -n ci-cache get pod -l eventsource-name=workflow-cache-es -o name)
-CLUSTER_NAME := lab
+ADMIN_PASSWORD = $$2a$$10$$fHMjO5gJhVg1fSU/lUwubO96tr4OiaKp9TdHTAjYm4z8eIfLNJOgK # admin
+WEBHOOK_POD = $(shell kubectl -n argo-events get pod -l eventsource-name=webhook -o name)
+WEBHOOK_MULTI = $(shell kubectl -n argo-events get pod -l eventsource-name=test-api-eventsource -o name)
+CI_POD = $(shell kubectl -n ci get pod -l eventsource-name=webhook-deps-es -o name)
+CI_POD_CACHE = $(shell kubectl -n ci-cache get pod -l eventsource-name=workflow-cache-es -o name)
 
 build-cluster:
 	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml

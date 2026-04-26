@@ -238,7 +238,7 @@ dns_servers = ["<corp_ip>","<corp_ip>", "8.8.8.8"]
 
 ---
 
-### WLS chagne boot to systemd=true
+### WSL chagne boot to systemd=true
 ```TOML
 [boot]
 systemd=true
