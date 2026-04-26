@@ -11,8 +11,10 @@ CLUSTER_NAME := lab
 build-cluster:
 	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
-build-cluster-linux:
-	systemd-run --scope --user -p "Delegate=yes" kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
+build-cluster-self-signed:
+	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-self-signed.yaml
+
+	#systemd-run --scope --user -p "Delegate=yes" kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
 delete-cluster:
 	kind delete cluster	-n $(CLUSTER_NAME)
@@ -142,7 +144,20 @@ web-pod:
 init: build-cluster create-namespaces argocd-2-10 argocd-patch-secret argo-workflows argo-events 
 # init-argocd-2-11: build-cluster create-namespaces argocd-2-11 argocd-patch-secret argo-workflows argo-events 
 init-basic: build-cluster create-namespaces argocd argocd-patch-secret 
-init-linux: build-cluster-linux create-namespaces argocd argocd-patch-secret argo-workflows argo-events
+init-self-signed-docker: build-cluster-self-signed trust-ca create-namespaces argocd argocd-patch-secret argo-workflows argo-events
+init-self-signed-podman: build-cluster-self-signed trust-ca-podman create-namespaces argocd argocd-patch-secret argo-workflows argo-events
+init-self-signed-basic-docker: build-cluster-self-signed trust-ca
+init-self-signed-basic-podman: build-cluster-self-signed trust-ca-podman
+
+trust-ca:
+	docker exec -it lab-control-plane bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
+	docker exec -it lab-worker bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
+	docker exec -it lab-worker2 bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
+
+trust-cd-podman:
+	podman exec -it lab-control-plane bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
+	podman exec -it lab-worker bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
+	podman exec -it lab-worker2 bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates
 
 hpa-noargo:
 	kubectl create namespace hpa
@@ -246,7 +261,6 @@ uptime-portforward:
 	kubectl -n argo-events port-forward svc/webhook-eventsource-svc 12000:12000 -n status-report &
 	kubectl -n argo-events port-forward svc/uptime-kuma-service 8090:80 -n uptime-kuma &
 
-
 dex-config:
 	kubectl apply -f charts/crds/dex.yaml -n argocd
 
@@ -318,4 +332,4 @@ rollout-promote:
 # github self hosted runner
 arc-intsall:
 	kubectl apply -f charts/crds/gh-runner-scale-set-controller.yaml -n argocd
-	kubectl apply -f charts/crds/gh-runner-scale-set.yaml -n argocd
+	# kubectl apply -f charts/crds/gh-runner-scale-set.yaml -n argocd

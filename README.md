@@ -204,3 +204,44 @@ ex container spec:
 [Argo events](https://github.com/argoproj/argo-events/tree/master/examples)
 
 # kindSampleCluster
+
+
+---
+# Linux install Docker + Podman
+
+```BASH
+echo >> "nameserver 8.8.8.8" >> /etc/resolv.conf
+```
+
+```JSON
+### Docker Only
+# add 8.8.8.8 to the dns section in /etc/docker/daemon.json
+# /etc/docker/daemon.json
+{
+  ...
+  "dns": ["<corp_ip>", "<corp_ip>", "8.8.8.8"],
+  ...
+}
+```
+
+---
+# Continued (PODMAN)
+
+ Add 8.8.8.8 to /etc/containers/containers.conf
+```TOML
+[engine]
+cgroup_manager = "systemd"
+
+[network]
+dns_servers = ["<corp_ip>","<corp_ip>", "8.8.8.8"]
+```
+
+---
+
+### WLS chagne boot to systemd=true
+```TOML
+[boot]
+systemd=true
+```
+
+restart wsl and podman and docker should run
