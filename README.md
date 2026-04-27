@@ -229,6 +229,12 @@ echo >> "nameserver 8.8.8.8" >> /etc/resolv.conf
 
  Add 8.8.8.8 to /etc/containers/containers.conf
 ```TOML
+# Corp self signed cert WSL + Linux (PODMAN)
+
+## Add 8.8.8.8 to /etc/containers/containers.conf
+```
+```BASH
+cat /etc/containers/containers.conf
 [engine]
 cgroup_manager = "systemd"
 
