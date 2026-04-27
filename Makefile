@@ -15,7 +15,7 @@ build-cluster:
 	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
 build-cluster-self-signed:
-	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-self-signed.yaml
+	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster-self-signed.yaml
 
 	#systemd-run --scope --user -p "Delegate=yes" kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
