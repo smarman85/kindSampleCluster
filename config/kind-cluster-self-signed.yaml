@@ -8,6 +8,9 @@ networking:
   serviceSubnet: "10.96.0.0/12"
 nodes:
 - role: control-plane
+  extraMounts:
+  - hostPath: ./sensitive/corp-self-signed.crt
+    containerPath: /usr/local/share/ca-certificates/corporate.crt
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
@@ -34,4 +37,10 @@ nodes:
     hostPort: 8443
     protocol: TCP
 - role: worker
+  extraMounts:
+  - hostPath: ./sensitive/corp-self-signed.crt
+    containerPath: /usr/local/share/ca-certificates/corporate.crt
 - role: worker
+  extraMounts:
+  - hostPath: ./sensitive/corp-self-signed.crt
+    containerPath: /usr/local/share/ca-certificates/corporate.crt
