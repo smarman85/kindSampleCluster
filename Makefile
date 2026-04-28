@@ -155,7 +155,7 @@ init-self-signed-basic-podman: build-cluster-self-signed trust-ca-podman
 trust-ca:
 	docker exec lab-control-plane bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 	docker exec lab-worker bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
-	docker exec lab-worker2 bash -c "chmod 644" /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
+	docker exec lab-worker2 bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 
 trust-ca-podman:
 	podman exec lab-control-plane bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"

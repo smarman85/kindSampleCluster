@@ -17,3 +17,9 @@ for i in $(seq 1 5)
 do
   aws sqs delete-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/localstack-queue --receipt-handle $(aws sqs receive-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/localstack-queue | jq -r '.Messages[].ReceiptHandle')
 done
+
+
+Coder:
+  # port forward to local machine
+  #         
+  ssh -NfL 30080:0.0.0.0:30080 smarman@main.sean-dev.smarman-apollo.coder
