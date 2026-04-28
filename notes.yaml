@@ -19,6 +19,10 @@ do
 done
 
 
+Kind:
+  https://kind.sigs.k8s.io/docs/user/quick-start/#installation
+
+
 Coder:
   # port forward to local machine
   #         
