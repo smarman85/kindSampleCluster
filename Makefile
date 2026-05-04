@@ -14,13 +14,22 @@ CI_POD_CACHE = $(shell kubectl -n ci-cache get pod -l eventsource-name=workflow-
 build-cluster:
 	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
+build-k3d:
+	k3d cluster create $(CLUSTER_NAME) --config ./config/k3d-cluster.yaml
+
 build-cluster-self-signed:
 	kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster-self-signed.yaml
 
 	#systemd-run --scope --user -p "Delegate=yes" kind create cluster --name $(CLUSTER_NAME) --config ./config/kind-cluster.yaml
 
+build-k3d-self-signed:
+	k3d cluster create $(CLUSTER_NAME) --config ./config/k3d-cluster-self-signed.yaml
+
 delete-cluster:
 	kind delete cluster	-n $(CLUSTER_NAME)
+
+delete-k3d:
+	k3d cluster delete $(CLUSTER_NAME)
 
 create-namespaces:
 	kubectl create namespace argo
@@ -30,7 +39,7 @@ create-namespaces:
 # argocd:
 # 	kubectl apply -f ./charts/infra/argocd/install.yaml -n argocd
 # 	# kubectl patch secret argocd-secret -n argocd -p '{"stringData": {"admin.password": "$(ADMIN_PASSWORD)", "admin.passwordMtime": "$(DATE)"}}'
-# 
+#
 # argocd-2-6-6:
 # 	kubectl apply -f ./charts/infra/argocd-2-6-6/install.yaml -n argocd
 
@@ -52,7 +61,7 @@ argocd-upgrade-2-11: argocd-2-11 argocd-patch-secret
 
 argo-workflows:
 	kubectl apply -f ./charts/infra/argo-workflows/install.yaml -n argo
-	# bypass ui for login 
+	# bypass ui for login
 	kubectl patch deployment argo-server --namespace argo --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": [ "server", "--auth-mode=server" ]}]'
 
 argo-workflows-ui:
@@ -142,25 +151,39 @@ demo-webhook-run:
 web-pod:
 	kubectl apply -f ./charts/crds/pod.yaml -n argocd
 
-# init-old: build-cluster create-namespaces argocd-2-6-6 argocd-patch-secret argo-workflows argo-events 
-# init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events 
-init: build-cluster create-namespaces argocd-2-10 argocd-patch-secret argo-workflows argo-events 
-# init-argocd-2-11: build-cluster create-namespaces argocd-2-11 argocd-patch-secret argo-workflows argo-events 
-init-basic: build-cluster create-namespaces argocd argocd-patch-secret 
+# init-old: build-cluster create-namespaces argocd-2-6-6 argocd-patch-secret argo-workflows argo-events
+# init: build-cluster create-namespaces argocd argocd-patch-secret argo-workflows argo-events
+init: build-cluster create-namespaces argocd-2-10 argocd-patch-secret argo-workflows argo-events
+# init-argocd-2-11: build-cluster create-namespaces argocd-2-11 argocd-patch-secret argo-workflows argo-events
+init-basic: build-cluster create-namespaces argocd argocd-patch-secret
 init-self-signed-docker: build-cluster-self-signed trust-ca create-namespaces argocd argocd-patch-secret argo-workflows argo-events
 init-self-signed-podman: build-cluster-self-signed trust-ca-podman create-namespaces argocd argocd-patch-secret argo-workflows argo-events
-init-self-signed-basic-docker: build-cluster-self-signed trust-ca
-init-self-signed-basic-podman: build-cluster-self-signed trust-ca-podman
+init-self-signed-basic-docker: build-cluster-self-signed trust-ca-k3d
+init-self-signed-basic-podman: build-cluster-self-signed trust-ca-k3d-podman
+init-self-signed-k3d-podman: build-k3d-self-signed trust-ca-k3d-podman
+init-self-signed-k3d-basic-docker: build-k3d-self-signed trust-ca-k3d
+init-k3d-podman: build-k3d trust-ca-k3d-podman
+init-k3d-docker: build-k3d trust-ca-k3d
 
 trust-ca:
 	docker exec lab-control-plane bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 	docker exec lab-worker bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 	docker exec lab-worker2 bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 
+trust-ca-k3d:
+	for node in k3d-lab-server-0 k3d-lab-agent-0 k3d-lab-agent-1; do \
+		docker exec $$node sh -c "cat /usr/local/share/ca-certificates/corporate.crt >> /etc/ssl/certs/ca-certificates.crt"; \
+	done
+
 trust-ca-podman:
 	podman exec lab-control-plane bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 	podman exec lab-worker bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
 	podman exec lab-worker2 bash -c "chmod 644 /usr/local/share/ca-certificates/corporate.crt && update-ca-certificates"
+
+trust-ca-k3d-podman:
+	for node in k3d-lab-server-0 k3d-lab-agent-0 k3d-lab-agent-1; do \
+		podman exec $$node sh -c "cat /usr/local/share/ca-certificates/corporate.crt >> /etc/ssl/certs/ca-certificates.crt"; \
+	done
 
 hpa-noargo:
 	kubectl create namespace hpa
@@ -222,10 +245,10 @@ rabbitmq-ui:
 	kubectl port-forward -n rabbitmq svc/rmq-svc 15672:15672 &
 	open /Applications/Google\ Chrome.app/ "http://0.0.0.0:15672"
 
-rabbitmq-send: 
+rabbitmq-send:
 	./demo/rabbitMQ/sender/sender
 
-rabbitmq-receive: 
+rabbitmq-receive:
 	./demo/rabbitMQ/receiver/receiver
 
 webhook-loop-infra:
@@ -292,7 +315,7 @@ ollama:
 
 	kubectl apply -f charts/crds/ollama.yaml -n argocd
 
-curl-runner: 
+curl-runner:
 	kubectl apply -f charts/crds/curl-runner.yaml -n argocd
 	kubectl apply -f charts/crds/curl-workflow.yaml -n argocd
 	kubectl port-forward svc/workflow-cache-es-eventsource-svc -n curl-workflow 12000:80 &
@@ -305,7 +328,7 @@ curl-runner-test:
 rollout-infra:
 	kubectl create ns argo-rollouts
 	kubectl apply -f charts/crds/argo-rollouts.yaml -n argocd
-	
+
 rollout-blue-green:
 	kubectl apply -f charts/crds/rollouts-blue-green.yaml
 
