@@ -38,6 +38,8 @@ create-namespaces:
 	kubectl create namespace argo-events
 
 #### FLUX ####
+flux-up: create-namespace-flux install-flux install-flux-instance
+
 create-namespace-flux:
 	kubectl create namespace flux-system
 
@@ -47,6 +49,10 @@ install-flux:
 install-flux-instance:
 	kubectl apply -f ./charts/flux-operator/flux-instance.yaml -n flux-system
 
+flux-down:
+	kubectl delete -f ./charts/flux-operator/flux-instance.yaml -n flux-system || true
+	kubectl delete -f ./charts/flux-operator/install.yaml -n flux-system || true
+	kubectl delete namespace flux-system || true
 
 # argocd:
 # 	kubectl apply -f ./charts/infra/argocd/install.yaml -n argocd
