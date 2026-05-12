@@ -35,6 +35,18 @@ create-namespaces:
 	kubectl create namespace argo
 	kubectl create namespace argocd
 	kubectl create namespace argo-events
+	kubectl create namespace argo-events
+
+#### FLUX ####
+create-namespace-flux:
+	kubectl create namespace flux-system
+
+install-flux:
+	kubectl apply -f ./charts/flux-operator/install.yaml -n flux-system
+
+install-flux-instance:
+	kubectl apply -f ./charts/flux-operator/flux-instance.yaml -n flux-system
+
 
 # argocd:
 # 	kubectl apply -f ./charts/infra/argocd/install.yaml -n argocd
