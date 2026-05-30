@@ -329,8 +329,7 @@ eso-demo:
 
 ollama:
 	kubectl apply -f charts/crds/local-path.yaml -n argocd
-	kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-
+	kubectl patch storageclass local-path -n local-path-storage -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 	kubectl apply -f charts/crds/ollama.yaml -n argocd
 
 curl-runner:
